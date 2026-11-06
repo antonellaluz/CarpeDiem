@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carpe Diem - Cronograma de Estudos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section id="welcome-screen" class="screen">
+    <img src="img/logo.png" alt="Carpe Diem" class="logo-img">
+
+    <p class="subtitle">O descanso também faz parte da sua aprovação.</p>
+  </section>
+
+  <section id="choice-screen" class="screen hidden">
+    <h2 class="choice-title">Como você quer organizar seus estudos hoje?</h2>
+    
+    <div class="options-container">
+      <button class="btn-option" onclick="selectOption('pronto')">Cronograma pronto</button>
+      <button class="btn-option" onclick="selectOption('proprio')">Montar meu próprio cronograma</button>
+    </div>
+  </section>
+
+  <script>
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const choiceScreen = document.getElementById('choice-screen');
+
+    function goToChoiceScreen() {
+      welcomeScreen.classList.add('hidden');
+      choiceScreen.classList.remove('hidden');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const isFirstAccess = localStorage.getItem('carpeDiem_firstAccess');
+
+      if (isFirstAccess === null) {
+        localStorage.setItem('carpeDiem_firstAccess', 'false');
+
+        setTimeout(() => {
+          goToChoiceScreen();
+        }, 30000);
+
+        welcomeScreen.addEventListener('click', goToChoiceScreen);
+      } else {
+        welcomeScreen.classList.add('hidden');
+        choiceScreen.classList.remove('hidden');
+      }
+    });
+
+    function selectOption(option) {
+      if (option === 'pronto') {
+        window.location.href = 'cronograma-pronto.html';
+      } else {
+        window.location.href = 'users_info.html';
+      }
+    }
+  </script>
+</body>
+</html>
