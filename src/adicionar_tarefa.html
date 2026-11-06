@@ -54,18 +54,32 @@
 
         <span id="duration-info" class="duration-display"></span>
 
-        <div class="form-group" style="margin-top: 16px;">
-            <label>Matéria:</label>
-            <select id="task-subject" onchange="atualizarAssuntos()">
-                <option value="" disabled selected>Selecione a matéria</option>
-            </select>
+        <div id="estudo-campos">
+            <div class="form-group">
+                <label>Matéria:</label>
+                <select id="task-subject" onchange="atualizarAssuntos()">
+                    <option value="" disabled selected>Selecione a matéria</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Assunto:</label>
+                <select id="task-topic">
+                    <option value="" disabled selected>Selecione o assunto</option>
+                </select>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>Assunto:</label>
-            <select id="task-topic">
-                <option value="" disabled selected>Selecione o assunto</option>
-            </select>
+            <label>Cor da Tarefa:</label>
+            <div class="color-picker-container">
+                <div class="color-circle" style="background-color: #c795b5;" onclick="selecionarCor('#c795b5', this)"></div>
+                <div class="color-circle" style="background-color: #a78bfa;" onclick="selecionarCor('#a78bfa', this)"></div>
+                <div class="color-circle" style="background-color: #60a5fa;" onclick="selecionarCor('#60a5fa', this)"></div>
+                <div class="color-circle" style="background-color: #4ade80;" onclick="selecionarCor('#4ade80', this)"></div>
+                <div class="color-circle" style="background-color: #fde047;" onclick="selecionarCor('#fde047', this)"></div>
+                <div class="color-circle" style="background-color: #f87171;" onclick="selecionarCor('#f87171', this)"></div>
+                <input type="color" id="task-color-custom" value="#c795b5" onchange="selecionarCorCustom(this.value)" title="Outra cor"></div>
         </div>
 
         <button class="btn-submit" onclick="salvarTarefa()">Ok</button>
@@ -133,6 +147,34 @@
         function focarCampoErro() {
             document.getElementById('modal-aviso').classList.remove('show');
             document.getElementById('task-end').focus();
+        }
+
+        let corSelecionada = '#c795b5';
+
+        function selecionarCor(hex, elemento) {
+            corSelecionada = hex;
+            document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+            elemento.classList.add('selected');
+        }
+
+        function selecionarCorCustom(hex) {
+            corSelecionada = hex;
+            document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+        }
+
+        function setTipo(tipo) {
+            tipoAtual = tipo;
+            document.getElementById('btn-variavel').classList.toggle('active', tipo === 'variavel');
+            document.getElementById('btn-fixa').classList.toggle('active', tipo === 'fixa');
+
+            const estudoCampos = document.getElementById('estudo-campos');
+            if (tipo === 'fixa') {
+                estudoCampos.style.display = 'none';
+            } else {
+                estudoCampos.style.display = 'block';
+            }
+
+            calcularDuracao();
         }
 
         function calcularDuracao() {
