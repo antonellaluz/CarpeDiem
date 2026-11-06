@@ -1,2 +1,128 @@
-<h1>Carpe Diem</h1>
-<h5>Aplicativo de Auxilio na rotina de estudos</h5>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carpe Diem</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+  <aside class="sidebar">
+    <img src="img/logo.png" alt="Carpe Diem" class="logo-mini">
+    <div class="nav-links">
+      <a href="index.html" class="active" title="Início"><i class="fa-solid fa-house"></i></a>
+      <a href="calendario.html" title="Calendário/Cronograma"><i class="fa-solid fa-calendar-days"></i></a>
+      <a href="formulario.html" title="Formulário"><i class="fa-solid fa-file-lines"></i></a>
+      <a href="perfil.html" title="Perfil"><i class="fa-solid fa-user"></i></a>
+    </div>
+  </aside>
+
+  <main class="main-content"> 
+  <div class="header-section">
+    <div class="welcome-wrapper">
+      <div class="welcome-text">
+        <h1 id="greeting-title">Bom dia, Estudante!</h1>
+        <p id="current-date">Carregando data...</p>
+      </div>
+      <img src="img/logo_minus.png" alt="Carpe Diem" class="logo-inline-mobile">
+    </div>
+  
+    <div class="quote-box">
+      "Amanhã o conteúdo estará lá, você poderá recuperar. Mas a sua energia não. Descanse!"
+    </div>
+  </div>
+
+    <div class="dashboard-grid">
+      
+      <div class="tasks-card">
+        <h3>Tarefas do dia</h3>
+        <div id="tasks-container">
+          <div class="task-item">
+            <div class="task-time">
+              15:00h
+              <span>17:30h</span>
+            </div>
+            <div class="task-info">
+              <h4>Estudo de Matemática</h4>
+              <p>Matemática — Funções</p>
+            </div>
+          </div>
+
+          <div class="task-item">
+            <div class="task-time">
+              19:35h
+              <span>21:00h</span>
+            </div>
+            <div class="task-info">
+              <h4>Redação Modelo ENEM</h4>
+              <p>Português — Argumentação</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-cards">
+        
+        <div class="todo-card">
+          <h4>Não esquecer!</h4>
+          <ul class="todo-list" id="todo-list">
+            <li class="todo-item">
+              <input type="checkbox" onchange="toggleTodo(this)">
+              <span>Atividade de Sociologia</span>
+            </li>
+            <li class="todo-item completed">
+              <input type="checkbox" checked onchange="toggleTodo(this)">
+              <span>Levar Lily ao veterinário</span>
+            </li>
+            <li class="todo-item">
+              <input type="checkbox" onchange="toggleTodo(this)">
+              <span>Atividade do curso</span>
+            </li>
+          </ul>
+        </div>
+
+        <a href="formulario.html" class="card-action">
+          <div>
+            <h4>Responder Formulário</h4>
+            <p>Disponível por 24h. Responda quando quiser!</p>
+          </div>
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const nomeUsuario = localStorage.getItem('carpeDiem_nome');
+      if (nomeUsuario) {
+        document.getElementById('greeting-title').textContent = `Bom dia, ${nomeUsuario}!`;
+      }
+
+      const optionsDate = { weekday: 'short', day: 'numeric', month: 'long' };
+      const now = new Date();
+      let dataFormatada = now.toLocaleDateString('pt-BR', optionsDate);
+      dataFormatada = dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
+
+      const horas = String(now.getHours()).padStart(2, '0');
+      const minutos = String(now.getMinutes()).padStart(2, '0');
+
+      document.getElementById('current-date').textContent = `${dataFormatada} | ${horas}:${minutos}`;
+    });
+
+    function toggleTodo(checkbox) {
+      const li = checkbox.parentElement;
+      if (checkbox.checked) {
+        li.classList.add('completed');
+      } else {
+        li.classList.remove('completed');
+      }
+    }
+  </script>
+</body>
+</html>
