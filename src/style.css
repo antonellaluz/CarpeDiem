@@ -152,7 +152,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* users_info.html + adicionar-tarefa.html */
+/* users_info.html + adicionar_tarefa.html */
 .container {
     background: #ffffff;
     padding: 30px;
@@ -301,6 +301,45 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     color: #fff;
 }
 
+/* adicionar_tarefa.html */
+.color-picker-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 5px;
+}
+
+#estudo-campos {
+    width: 100%;
+}
+
+.color-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.color-circle:hover {
+    transform: scale(1.1);
+}
+
+.color-circle.selected {
+    border-color: #000;
+    transform: scale(1.1);
+}
+
+#task-color-custom {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+}
 
 /* index.html */
 body.dashboard-body {
@@ -348,8 +387,8 @@ body.dashboard-body {
 
 .nav-links a.active,
 .nav-links a:hover {
-    background-color: var(--button-bg);
-    color: #ffffff;
+    color: #9e6b8c;
+    transform: scale(1.1);
 }
 
 .main-content {
@@ -549,6 +588,229 @@ body.dashboard-body {
     color: #aaa;
 }
 
+/* calendario.html */
+body.calendar-body {
+    display: block !important;
+    background-color: var(--bg-color);
+}
+
+.calendar-main-content {
+    margin-left: 90px;
+    padding: 40px;
+    max-width: 1250px;
+}
+
+.calendar-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+}
+
+.calendar-title-area h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 4px;
+}
+
+.calendar-title-area p {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #000;
+}
+
+.calendar-title-area p span {
+    color: var(--button-bg);
+    font-weight: 600;
+}
+
+.calendar-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.cal-icon-btn {
+    background: var(--card-bg);
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+}
+
+.cal-icon-btn:hover {
+    background: var(--button-bg);
+    color: #fff;
+}
+
+.schedule-card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    overflow-x: auto;
+}
+
+.time-blocking-grid {
+    display: grid;
+    grid-template-columns: 75px repeat(7, 1fr);
+    min-width: 900px;
+    position: relative;
+}
+
+.grid-col-header {
+    text-align: center;
+    padding: 12px 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 1px solid #eee;
+}
+
+.grid-col-header.active-day {
+    background-color: #000;
+    color: #fff;
+    border-radius: 10px;
+}
+
+.time-row-label {
+    font-size: 0.75rem;
+    color: #888;
+    text-align: right;
+    padding-right: 15px;
+    height: 60px;
+    border-right: 1px solid #eee;
+    font-weight: 600;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-top: 5px;
+}
+
+.time-slot-cell {
+    height: 60px;
+    border-bottom: 1px solid #f3eff8;
+    border-right: 1px solid #f3eff8;
+    position: relative;
+}
+
+.scheduled-task-block {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    z-index: 2;
+}
+
+.scheduled-task-block .t-title {
+    font-weight: 700;
+    color: #111;
+    font-size: 0.85rem;
+}
+
+.scheduled-task-block .t-time {
+    font-size: 0.7rem;
+    color: #666;
+    margin-top: 2px;
+}
+
+.scheduled-task-block .t-category {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 6px;
+    text-transform: uppercase;
+}
+
+.scheduled-task-block .t-category::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #333;
+}
+
+.bg-fixo {background-color: #f0ece9;}
+.bg-lazer {background-color: #eadcf8;}
+.bg-estudo {background-color: #fce1e8;}
+.bg-descanso {background-color: #fef0c7;}
+.bg-sono {background-color: #e0f2fe;}
+
+.monthly-wrapper {
+    display: none;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.monthly-grid-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.monthly-days-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.month-cell {
+    background-color: var(--input-bg);
+    border-radius: 14px;
+    min-height: 95px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.month-cell.muted {
+    opacity: 0.35;
+}
+
+.month-cell-number {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.month-task-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 /* RESPONSIVIDADE */
 @media (max-width: 900px) {
@@ -607,5 +869,29 @@ body.dashboard-body {
         display: block;
         width: 45px;
         height: auto;
+    }
+
+    .calendar-main-content {
+        margin-left: 0;
+        margin-bottom: 90px;
+        padding: 20px;
+      }
+    
+    .sidebar {
+        width: 100%;
+        height: 65px;
+        bottom: 0;
+        top: auto;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 0 15px;
+    }
+    
+    .sidebar .logo-mini {display: none;}
+    
+    .nav-links {
+        flex-direction: row; 
+        gap: 0; width: 100%; 
+        justify-content: space-around;
     }
 }

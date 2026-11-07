@@ -21,8 +21,7 @@
         <div class="form-group">
             <label>Tipo de Tarefa:</label>
             <div class="tipo-container">
-                <button type="button" class="tipo-btn active" id="btn-variavel" onclick="setTipo('variavel')">Variável
-                    (Máx 2h)</button>
+                <button type="button" class="tipo-btn active" id="btn-variavel" onclick="setTipo('variavel')">Variável (Máx 2h)</button>
                 <button type="button" class="tipo-btn" id="btn-fixa" onclick="setTipo('fixa')">Fixa (Livre)</button>
             </div>
         </div>
@@ -79,7 +78,8 @@
                 <div class="color-circle" style="background-color: #4ade80;" onclick="selecionarCor('#4ade80', this)"></div>
                 <div class="color-circle" style="background-color: #fde047;" onclick="selecionarCor('#fde047', this)"></div>
                 <div class="color-circle" style="background-color: #f87171;" onclick="selecionarCor('#f87171', this)"></div>
-                <input type="color" id="task-color-custom" value="#c795b5" onchange="selecionarCorCustom(this.value)" title="Outra cor"></div>
+                <input type="color" id="task-color-custom" value="#c795b5" onchange="selecionarCorCustom(this.value)" title="Outra cor">
+            </div>
         </div>
 
         <button class="btn-submit" onclick="salvarTarefa()">Ok</button>
@@ -234,6 +234,7 @@
         function salvarTarefa() {
             const dia = document.getElementById('task-day').value;
             const duracaoHoras = calcularDuracao();
+            const tipoMudanca = "";
 
             if (duracaoHoras <= 0) {
                 alert("Por favor, preencha horários válidos antes de continuar.");
@@ -242,11 +243,13 @@
 
             if (dia === 'domingo' && tipoAtual === 'variavel') {
                 mostrarModal("⚠️ Ação não permitida", "Você não pode agendar tarefas variáveis aos domingos. Apenas tarefas fixas são permitidas.");
+                tipoMudanca = "Dia da semana";
                 return;
             }
 
             if (tipoAtual === 'variavel' && duracaoHoras > 2) {
                 mostrarModal("⚠️ Calma lá, vestibulando!", "Percebemos que você agendou mais de 2 horas seguidas para estudar, isso reduz sua retenção de conteúdo e aumenta o cansaço visual e mental.");
+                tipoMudanca = "Duraação";
                 return;
             }
 

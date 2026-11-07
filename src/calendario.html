@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carpe Diem - Cronograma e Calendário</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="calendar-body">
+
+  <aside class="sidebar">
+    <img src="img/logo_minus.png" alt="Carpe Diem" class="logo-mini">
+    <div class="nav-links">
+      <a href="index.html" title="Início"><i class="fa-solid fa-house"></i></a>
+      <a href="calendario.html" class="active" title="Calendário/Cronograma"><i class="fa-solid fa-calendar-days"></i></a>
+      <a href="formulario.html" title="Formulário"><i class="fa-solid fa-file-lines"></i></a>
+      <a href="perfil.html" title="Perfil"><i class="fa-solid fa-user"></i></a>
+    </div>
+  </aside>
+
+  <main class="calendar-main-content">
+    <div class="calendar-header-bar">
+      <div class="calendar-title-area">
+        <h1 id="page-main-title">Cronograma</h1>
+        <p id="date-range-label">25-31 Outubro <span>2026</span></p>
+      </div>
+
+      <div class="calendar-actions">
+        <a href="adicionar_tarefa.html" class="cal-icon-btn" title="Adicionar Tarefa"><i class="fa-solid fa-plus"></i></a>
+        <button class="cal-icon-btn" id="view-switch-btn" onclick="alternarModoCalendario()" title="Alternar para Calendário Mensal">
+          <i class="fa-regular fa-calendar" id="switch-icon"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="schedule-card" id="weekly-card-view">
+      <div class="time-blocking-grid" id="weekly-grid-container">
+      </div>
+    </div>
+
+    <div class="monthly-wrapper" id="monthly-card-view">
+      <div class="monthly-grid-header">
+        <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+      </div>
+      <div class="monthly-days-container" id="monthly-grid-container">
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let visualizacaoMensal = false;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      construirGridSemanal();
+    });
+
+    function alternarModoCalendario() {
+      visualizacaoMensal = !visualizacaoMensal;
+      const weeklyView = document.getElementById('weekly-card-view');
+      const monthlyView = document.getElementById('monthly-card-view');
+      const mainTitle = document.getElementById('page-main-title');
+      const switchIcon = document.getElementById('switch-icon');
+
+      if (visualizacaoMensal) {
+        weeklyView.style.display = 'none';
+        monthlyView.style.display = 'block';
+        mainTitle.textContent = "Calendário Mensal";
+        switchIcon.className = "fa-solid fa-clock";
+        construirGridMensal();
+      } else {
+        weeklyView.style.display = 'block';
+        monthlyView.style.display = 'none';
+        mainTitle.textContent = "Cronograma";
+        switchIcon.className = "fa-regular fa-calendar";
+        construirGridSemanal();
+      }
+    }
+
+    function construirGridSemanal() {
+      const container = document.getElementById('weekly-grid-container');
+      const dateRangeLabel = document.getElementById('date-range-label');
+      
+      const hoje = new Date();
+      const ano = hoje.getFullYear();
+      const mesNome = hoje.toLocaleDateString('pt-BR', { month: 'long' });
+      dateRangeLabel.innerHTML = `Semana Atual <span>${ano}</span>`;
+
+      let html = `<div></div>`;
+      
+      const nomeDias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      const diaSemanaAtual = hoje.getDay();
+      
+      let primeiroDiaSemana = new Date(hoje);
+      primeiroDiaSemana.setDate(hoje.getDate() - diaSemanaActual(diaSemanaAtual));
+
+      let datasSemana = [];
+      for (let i = 0; i < 7; i++) {
+        let d = new Date(primeiroDiaSemana);
+        d.setDate(primeiroDiaSemana.getDate() + i);
+        datasSemana.push(d);
+
+        const isToday = d.toDateString() === new Date().toDateString();
+        html += `<div class="grid-col-header ${isToday ? 'active-day' : ''}">
+          ${d.getDate()} - ${nomeDias[i]}
+        </div>`;
+      }
+
+      const tarefasSalvas = JSON.parse(localStorage.getItem('carpeDiem_tarefas')) || [];
+
+      for (let h = 6; h <= 22; h++) {
+        const horaStr = String(h).padStart(2, '0') + ':00';
+        html += `<div class="time-row-label">${horaStr}</div>`;
+
+        for (let d = 0; d < 7; d++) {
+          let dataFormatadaYMD = datasSemana[d].toISOString().split('T')[0];
+          
+          let tarefasDoSlot = tarefasSalvas.filter(t => {
+            if (t.data !== dataFormatadaYMD) return false;
+            if (!t.horaInicio) return false;
+            let horaInicioTarefa = parseInt(t.horaInicio.split(':')[0]);
+            return horaInicioTarefa === h;
+          });
+
+          let conteudoCelula = '';
+          tarefasDoSlot.forEach(t => {
+            conteudoCelula += `<div class="scheduled-task-block" style="background-color: ${t.cor || '#fce1e8'};">
+              <div>
+                <div class="t-title">${t.titulo}</div>
+                <div class="t-time">${t.horaInicio} - ${t.horaFim || ''}</div>
+              </div>
+              <div class="t-category">${t.tipo || 'Estudo'}</div>
+            </div>`;
+          });
+
+          html += `<div class="time-slot-cell">${conteudoCelula}</div>`;
+        }
+      }
+
+      container.innerHTML = html;
+    }
+
+    function diaSemanaActual(dia) {
+      return dia;
+    }
+
+    function construirGridMensal() {
+      const container = document.getElementById('monthly-grid-container');
+      const dateRangeLabel = document.getElementById('date-range-label');
+      
+      const agora = new Date();
+      const ano = agora.getFullYear();
+      const mes = agora.getMonth();
+
+      dateRangeLabel.textContent = agora.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+
+      const primeiroDiaMes = new Date(ano, mes, 1).getDay();
+      const ultimoDiaMes = new Date(ano, mes + 1, 0).getDate();
+      const ultimoDiaMesAnterior = new Date(ano, mes, 0).getDate();
+
+      let html = '';
+
+      for (let i = primeiroDiaMes - 1; i >= 0; i--) {
+        html += `<div class="month-cell muted"><span class="month-cell-number">${ultimoDiaMesAnterior - i}</span></div>`;
+      }
+
+      const tarefasSalvas = JSON.parse(localStorage.getItem('carpeDiem_tarefas')) || [];
+
+      for (let dia = 1; dia <= ultimoDiaMes; dia++) {
+        const dataStr = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+        const tarefasDoDia = tarefasSalvas.filter(t => t.data === dataStr);
+
+        let badges = '';
+        tarefasDoDia.forEach(t => {
+          badges += `<div class="month-task-badge" style="background-color: ${t.cor || '#c795b5'}">${t.titulo}</div>`;
+        });
+
+        html += `<div class="month-cell">
+          <span class="month-cell-number">${dia}</span>
+          ${badges}
+        </div>`;
+      }
+
+      container.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
