@@ -27,17 +27,8 @@
         </div>
 
         <div class="form-group">
-            <label>Dia da semana:</label>
-            <select id="task-day" onchange="verificarDomingo()">
-                <option value="" disabled selected>Selecione o dia da semana</option>
-                <option value="segunda">Segunda-feira</option>
-                <option value="terca">Terça-feira</option>
-                <option value="quarta">Quarta-feira</option>
-                <option value="quinta">Quinta-feira</option>
-                <option value="sexta">Sexta-feira</option>
-                <option value="sabado">Sábado</option>
-                <option value="domingo">Domingo</option>
-            </select>
+            <label>Data:</label>
+            <input type="date" id="task-date">
         </div>
 
         <div class="row-group">
@@ -90,171 +81,199 @@
         <div class="modal-box">
             <h3 id="modal-titulo">⚠️ Calma lá, vestibulando!</h3>
             <p id="modal-texto">Mensagem de aviso aqui.</p>
-            <button class="modal-btn" onclick="focarCampoErro()">Mudar duração</button>
+            <button class="modal-btn" onclick="focarCampoErro()">Alterar informação</button>
         </div>
     </div>
 
     <script>
         const materiasAssuntos = {
-            "Matemática": ["Funções", "Geometria Plana", "Probabilidade", "Matrizes"],
-            "Física": ["Cinemática", "Dinâmica", "Termologia", "Óptica"],
-            "Química": ["Estequiometria", "Termoquímica", "Eletroquímica", "Química Orgânica"],
-            "Biologia": ["Citologia", "Genética", "Ecologia", "Fisiologia Humana"],
-            "Português": ["Crase", "Análise Sintática", "Figuras de Linguagem", "Modernismo"]
-        };
+        "Matemática": ["Funções", "Geometria Plana", "Probabilidade", "Matrizes"],
+        "Física": ["Cinemática", "Dinâmica", "Termologia", "Óptica"],
+        "Química": ["Estequiometria", "Termoquímica", "Eletroquímica", "Química Orgânica"],
+        "Biologia": ["Citologia", "Genética", "Ecologia", "Fisiologia Humana"],
+        "Português": ["Crase", "Análise Sintática", "Figuras de Linguagem", "Modernismo"]
+    };
 
-        let tipoAtual = 'variavel';
+    let tipoAtual = 'variavel';
+    let corSelecionada = '#c795b5';
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const subjectSelect = document.getElementById('task-subject');
+    window.addEventListener('DOMContentLoaded', () => {
+        const subjectSelect = document.getElementById('task-subject');
+        if (subjectSelect) {
             for (let materia in materiasAssuntos) {
                 let option = document.createElement('option');
                 option.value = materia;
                 option.textContent = materia;
                 subjectSelect.appendChild(option);
             }
+        }
+    });
+
+    function atualizarAssuntos() {
+        const materiaSelecionada = document.getElementById('task-subject').value;
+        const topicSelect = document.getElementById('task-topic');
+        if (!topicSelect) return;
+
+        topicSelect.innerHTML = '<option value="" disabled selected>Selecione o assunto</option>';
+
+        if (materiasAssuntos[materiaSelecionada]) {
+            materiasAssuntos[materiaSelecionada].forEach(assunto => {
+                let option = document.createElement('option');
+                option.value = assunto;
+                option.textContent = assunto;
+                topicSelect.appendChild(option);
+            });
+        }
+    }
+
+    function setTipo(tipo) {
+        tipoAtual = tipo;
+        ['variavel', 'fixa', 'lembrete'].forEach(t => {
+            const btn = document.getElementById(`btn-${t}`);
+            if (btn) btn.classList.toggle('active', tipo === t);
         });
 
-        function atualizarAssuntos() {
-            const materiaSelecionada = document.getElementById('task-subject').value;
-            const topicSelect = document.getElementById('task-topic');
-
-            topicSelect.innerHTML = '<option value="" disabled selected>Selecione o assunto</option>';
-
-            if (materiasAssuntos[materiaSelecionada]) {
-                materiasAssuntos[materiaSelecionada].forEach(assunto => {
-                    let option = document.createElement('option');
-                    option.value = assunto;
-                    option.textContent = assunto;
-                    topicSelect.appendChild(option);
-                });
-            }
-        }
-
-        function setTipo(tipo) {
-            tipoAtual = tipo;
-            document.getElementById('btn-variavel').classList.toggle('active', tipo === 'variavel');
-            document.getElementById('btn-fixa').classList.toggle('active', tipo === 'fixa');
-            calcularDuracao();
-        }
-
-        function mostrarModal(titulo, texto) {
-            document.getElementById('modal-titulo').textContent = titulo;
-            document.getElementById('modal-texto').textContent = texto;
-            document.getElementById('modal-aviso').classList.add('show');
-        }
-
-        function focarCampoErro() {
-            document.getElementById('modal-aviso').classList.remove('show');
-            document.getElementById('task-end').focus();
-        }
-
-        let corSelecionada = '#c795b5';
-
-        function selecionarCor(hex, elemento) {
-            corSelecionada = hex;
-            document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
-            elemento.classList.add('selected');
-        }
-
-        function selecionarCorCustom(hex) {
-            corSelecionada = hex;
-            document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
-        }
-
-        function setTipo(tipo) {
-            tipoAtual = tipo;
-            document.getElementById('btn-variavel').classList.toggle('active', tipo === 'variavel');
-            document.getElementById('btn-fixa').classList.toggle('active', tipo === 'fixa');
-
-            const estudoCampos = document.getElementById('estudo-campos');
-            if (tipo === 'fixa') {
+        const estudoCampos = document.getElementById('estudo-campos');
+        if (estudoCampos) {
+            if (tipo === 'fixa' || tipo === 'lembrete') {
                 estudoCampos.style.display = 'none';
             } else {
                 estudoCampos.style.display = 'block';
             }
-
-            calcularDuracao();
         }
 
-        function calcularDuracao() {
-            const horaInicio = document.getElementById('task-start').value;
-            const horaFim = document.getElementById('task-end').value;
-            const display = document.getElementById('duration-info');
-            const inputFim = document.getElementById('task-end');
+        calcularDuracao();
+    }
 
-            if (!horaInicio || !horaFim) {
-                display.textContent = '';
-                inputFim.classList.remove('input-error');
-                display.classList.remove('error-text');
-                return 0;
-            }
+    function selecionarCor(hex, elemento) {
+        corSelecionada = hex;
+        document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+        if (elemento) elemento.classList.add('selected');
+    }
 
-            const [hI, mI] = horaInicio.split(':').map(Number);
-            const [hF, mF] = horaFim.split(':').map(Number);
+    function selecionarCorCustom(hex) {
+        corSelecionada = hex;
+        document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+    }
 
-            let minutosTotais = (hF * 60 + mF) - (hI * 60 + mI);
+    function calcularDuracao() {
+        const horaInicio = document.getElementById('task-start').value;
+        const horaFim = document.getElementById('task-end').value;
+        const display = document.getElementById('duration-info');
+        const inputFim = document.getElementById('task-end');
 
-            if (minutosTotais <= 0) {
-                display.textContent = 'O horário de término deve ser posterior ao início.';
-                display.classList.add('error-text');
-                inputFim.classList.add('input-error');
-                return -1;
-            }
+        if (!display || !inputFim) return 0;
 
-            const horas = Math.floor(minutosTotais / 60);
-            const minutos = minutosTotais % 60;
-            let textoDuracao = 'Duração: ';
-
-            if (horas > 0) textoDuracao += `${horas}h `;
-            if (minutos > 0) textoDuracao += `${minutos}min`;
-
-            const horasDecimais = minutosTotais / 60;
-
-            if (tipoAtual === 'variavel' && horasDecimais > 2) {
-                display.textContent = `${textoDuracao} — Excede o limite de 2h!`;
-                display.classList.add('error-text');
-                inputFim.classList.add('input-error');
-            } else {
-                display.textContent = textoDuracao;
-                display.classList.remove('error-text');
-                inputFim.classList.remove('input-error');
-            }
-
-            return horasDecimais;
+        if (!horaInicio || !horaFim) {
+            display.textContent = '';
+            inputFim.classList.remove('input-error');
+            display.classList.remove('error-text');
+            return 0;
         }
 
-        function verificarDomingo() {
-            const dia = document.getElementById('task-day').value;
-            if (dia === 'domingo' && tipoAtual === 'variavel') {
-                mostrarModal("🏖️ Dia de Descanso!", "Domingo é definido como dia de descanso ou lazer. Além de tarefas fixas, nenhuma outra atividade variável pode ser agendada para este dia.");
-            }
+        const [hI, mI] = horaInicio.split(':').map(Number);
+        const [hF, mF] = horaFim.split(':').map(Number);
+
+        let minutosTotais = (hF * 60 + mF) - (hI * 60 + mI);
+
+        if (minutosTotais <= 0) {
+            display.textContent = 'O horário de término deve ser posterior ao início.';
+            display.classList.add('error-text');
+            inputFim.classList.add('input-error');
+            return -1;
         }
 
-        function salvarTarefa() {
-            const dia = document.getElementById('task-day').value;
-            const duracaoHoras = calcularDuracao();
-            const tipoMudanca = "";
+        const horas = Math.floor(minutosTotais / 60);
+        const minutos = minutosTotais % 60;
+        let textoDuracao = 'Duração: ';
 
-            if (duracaoHoras <= 0) {
-                alert("Por favor, preencha horários válidos antes de continuar.");
+        if (horas > 0) textoDuracao += `${horas}h `;
+        if (minutos > 0) textoDuracao += `${minutos}min`;
+
+        const horasDecimais = minutosTotais / 60;
+
+        if (tipoAtual === 'variavel' && horasDecimais > 2) {
+            display.textContent = `${textoDuracao} — Excede o limite de 2h!`;
+            display.classList.add('error-text');
+            inputFim.classList.add('input-error');
+        } else {
+            display.textContent = textoDuracao;
+            display.classList.remove('error-text');
+            inputFim.classList.remove('input-error');
+        }
+
+        return horasDecimais;
+    }
+
+    function mostrarModal(titulo, texto) {
+        const modalTitulo = document.getElementById('modal-titulo');
+        const modalTexto = document.getElementById('modal-texto');
+        const modalAviso = document.getElementById('modal-aviso');
+
+        if (modalTitulo) modalTitulo.textContent = titulo;
+        if (modalTexto) modalTexto.textContent = texto;
+        if (modalAviso) modalAviso.classList.add('show');
+        else alert(`${titulo}\n\n${texto}`);
+    }
+
+    function focarCampoErro() {
+        const modalAviso = document.getElementById('modal-aviso');
+        if (modalAviso) modalAviso.classList.remove('show');
+        const inputFim = document.getElementById('task-end');
+        if (inputFim) inputFim.focus();
+    }
+
+    function salvarTarefa(event) {
+        if (event) event.preventDefault();
+
+        const titulo = document.getElementById('task-name').value;
+        const dataInput = document.getElementById('task-date') ? document.getElementById('task-date').value : '';
+        const duracaoHoras = calcularDuracao();
+        let campoParaAlterar = "";
+
+        if (!titulo || !dataInput) {
+            mostrarModal("⚠️ Campos obrigatórios", "Você precisa preencher o Título e selecionar uma Data válida.");
+            return;
+        }
+
+        if (duracaoHoras <= 0) {
+            mostrarModal("⚠️ Horário Inválido", "O horário de término está incorreto. Por favor, ajuste o campo de Horário de Término.");
+            return;
+        }
+
+        if (dataInput) {
+            const dataObj = new Date(dataInput + 'T00:00:00');
+            const diaSemana = dataObj.getDay();
+            if (diaSemana === 0 && tipoAtual === 'variavel') {
+                mostrarModal("⚠️ Ação não permitida", "Você não pode agendar tarefas variáveis aos domingos. Apenas tarefas fixas são permitidas");
                 return;
             }
-
-            if (dia === 'domingo' && tipoAtual === 'variavel') {
-                mostrarModal("⚠️ Ação não permitida", "Você não pode agendar tarefas variáveis aos domingos. Apenas tarefas fixas são permitidas.");
-                tipoMudanca = "Dia da semana";
-                return;
-            }
-
-            if (tipoAtual === 'variavel' && duracaoHoras > 2) {
-                mostrarModal("⚠️ Calma lá, vestibulando!", "Percebemos que você agendou mais de 2 horas seguidas para estudar, isso reduz sua retenção de conteúdo e aumenta o cansaço visual e mental.");
-                tipoMudanca = "Duraação";
-                return;
-            }
-
-            alert("Tarefa salva com sucesso!");
         }
+
+        if (tipoAtual === 'variavel' && duracaoHoras > 2) {
+            mostrarModal("⚠️ Calma lá, vestibulando!", "Percebemos que você agendou mais de 2 horas seguidas para estudar, isso reduz sua retenção de conteúdo e aumenta o cansaço visual e mental.");
+            return;
+        }
+
+        const novaTarefa = {
+            titulo,
+            tipo: tipoAtual,
+            data: dataInput,
+            horaInicio: document.getElementById('task-start').value,
+            horaFim: document.getElementById('task-end').value,
+            cor: corSelecionada,
+            materia: tipoAtual === 'variavel' ? document.getElementById('task-subject').value : null,
+            assunto: tipoAtual === 'variavel' ? document.getElementById('task-topic').value : null
+        };
+
+        let tarefas = JSON.parse(localStorage.getItem('carpeDiem_tarefas')) || [];
+        tarefas.push(novaTarefa);
+        localStorage.setItem('carpeDiem_tarefas', JSON.stringify(tarefas));
+
+        alert("Tarefa salva com sucesso!");
+
+        window.location.href = 'calendario.html';
+    }
     </script>
 </body>
 </html>
