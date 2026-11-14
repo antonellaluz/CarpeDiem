@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulário de Bem-Estar - Carpe Diem</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container" style="max-width: 500px;">
+    <img src="img/logo.png" alt="Carpe Diem" class="logo-small">
+
+    <h1>Formulário de bem-estar</h1>
+
+    <div class="form-group">
+      <label>Como está a tua energia emocional hoje?</label>
+      <div class="options-container" style="text-align: left;">
+        <label class="btn-option" style="display: flex; align-items: center; gap: 10px; font-weight: normal;">
+          <input type="radio" name="energia"> Elevada: Sinto-me com força e motivação.
+        </label>
+        <label class="btn-option" style="display: flex; align-items: center; gap: 10px; font-weight: normal;">
+          <input type="radio" name="energia"> Equilibrada: Sinto-me bem, num ritmo normal.
+        </label>
+        <label class="btn-option" style="display: flex; align-items: center; gap: 10px; font-weight: normal;">
+          <input type="radio" name="energia"> Baixa: Sinto-me sem energia ou cansado(a).
+        </label>
+        <label class="btn-option" style="display: flex; align-items: center; gap: 10px; font-weight: normal;">
+          <input type="radio" name="energia"> Esgotada: Sinto-me no limite ou sobrecarregado(a).
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 20px;">
+      <label>Como foi seu sono?</label>
+      <div class="options-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <label class="btn-option" style="display: flex; align-items: center; gap: 8px; font-weight: normal; font-size: 12px;">
+          <input type="radio" name="sono"> Repousante
+        </label>
+        <label class="btn-option" style="display: flex; align-items: center; gap: 8px; font-weight: normal; font-size: 12px;">
+          <input type="radio" name="sono"> Razoável
+        </label>
+        <label class="btn-option" style="display: flex; align-items: center; gap: 8px; font-weight: normal; font-size: 12px;">
+          <input type="radio" name="sono"> Agitado
+        </label>
+        <label class="btn-option" style="display: flex; align-items: center; gap: 8px; font-weight: normal; font-size: 12px;">
+          <input type="radio" name="sono"> Insuficiente
+        </label>
+      </div>
+    </div>
+
+    <a href="index.html" class="btn-submit" style="display: block; text-align: center; text-decoration: none; box-sizing: border-box;">Ok</a>
+  </div>
+</body>
+</html>
