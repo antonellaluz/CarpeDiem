@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil - Carpe Diem</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+  <aside class="sidebar">
+    <img src="img/logo_minus.png" alt="Carpe Diem" class="logo-mini">
+    <div class="nav-links">
+      <a href="index.html" title="Início"><i class="fa-solid fa-house"></i></a>
+      <a href="calendario.html" title="Calendário/Cronograma"><i class="fa-solid fa-calendar-days"></i></a>
+      <a href="formulario.html" title="Formulário"><i class="fa-solid fa-file-lines"></i></a>
+      <a href="perfil.html" class="active" title="Perfil"><i class="fa-solid fa-user"></i></a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="header-section">
+      <h1>Perfil</h1>
+    </div>
+
+    <div class="container" style="margin: 0; max-width: 100%;">
+      <h2 style="text-align: left; margin-bottom: 4px;">Vestibulando da Silva</h2>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">vestibulando@gmail.com</p>
+
+      <div class="form-group">
+        <p style="font-size: 13px;"><strong>Curso:</strong> Engenharia de software</p>
+        <p style="font-size: 13px; margin-top: 6px;"><strong>Universidade:</strong> UFPA</p>
+        <p style="font-size: 13px; margin-top: 6px;"><strong>Método de entrada:</strong> ENEM</p>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid var(--border-color); margin: 20px 0;">
+
+      <div class="options-container">
+        <a href="calendario.html" class="btn-option" style="text-align: left; font-size: 13px; text-decoration: none; display: block;">
+          <i class="fa-solid fa-rotate-right"></i> Recarregar Cronograma (Restaurar Padrão)
+        </a>
+        <a href="index.html" class="btn-option" style="text-align: left; font-size: 13px; color: var(--error-color); border-color: var(--error-color); text-decoration: none; display: block;">
+          <i class="fa-solid fa-trash"></i> Apagar dados
+        </a>
+        <a href="index.html" class="btn-option" style="text-align: left; font-size: 13px; text-decoration: none; display: block;">
+          <i class="fa-solid fa-right-from-bracket"></i> Sair
+        </a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
