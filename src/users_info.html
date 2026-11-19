@@ -7,6 +7,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#c795b5">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -34,7 +39,14 @@
 
     <div class="form-group">
       <label>Defina quantas horas serão destinadas ao sono:</label>
-      <input type="number" id="sleep-hours" placeholder="Ex: 8" min="1" max="24" oninput="limparErroSono()">
+      <input
+        type="text"
+        id="sleep-hours"
+        placeholder="Ex: 8"
+        inputmode="decimal"
+        maxlength="5"
+        autocomplete="off"
+      >
 
       <span id="sono-info" class="duration-display"></span>
     </div>
@@ -49,8 +61,13 @@
       <button class="modal-btn" onclick="fecharModal()">Ajustar sono</button>
     </div>
   </div>
-
+ <script src="ui.js"></script>
   <script>
+    const SONO_MINIMO = 7;
+    const SONO_MAXIMO = 24;
+
+    const sonoInput = document.getElementById('sleep-hours');
+
     function mostrarModal(titulo, texto) {
       document.getElementById('modal-titulo').textContent = titulo;
       document.getElementById('modal-texto').textContent = texto;
@@ -59,27 +76,65 @@
 
     function fecharModal() {
       document.getElementById('modal-aviso').classList.remove('show');
-      document.getElementById('sleep-hours').focus();
+      sonoInput.focus();
     }
 
     function limparErroSono() {
-      document.getElementById('sleep-hours').classList.remove('input-error');
+      sonoInput.classList.remove('input-error');
     }
 
+    // Converte o texto do campo em número (aceita vírgula ou ponto)
+    function lerSono() {
+      return parseFloat(sonoInput.value.replace(',', '.'));
+    }
+
+    // Filtra o que é digitado: só números e um separador decimal, nunca acima de 24
+    sonoInput.addEventListener('input', function () {
+      limparErroSono();
+
+      // Remove tudo que não for número, vírgula ou ponto
+      let valor = this.value.replace(/[^0-9.,]/g, '');
+
+      // Mantém apenas um separador decimal
+      const partes = valor.split(/[.,]/);
+      if (partes.length > 2) {
+        valor = partes[0] + ',' + partes.slice(1).join('');
+      }
+
+      // Limita a uma casa decimal (ex: 7,5)
+      const sep = valor.search(/[.,]/);
+      if (sep !== -1) {
+        valor = valor.slice(0, sep + 2);
+      }
+
+      // Se passar do máximo, trava no máximo
+      const numero = parseFloat(valor.replace(',', '.'));
+      if (!isNaN(numero) && numero > SONO_MAXIMO) {
+        valor = String(SONO_MAXIMO);
+      }
+
+      this.value = valor;
+    });
+
     function salvarDados() {
-      const nome = document.getElementById('username').value;
+      const nome = document.getElementById('username').value.trim();
       const periodo = document.getElementById('school-period').value;
-      const sonoInput = document.getElementById('sleep-hours');
-      const sono = parseFloat(sonoInput.value);
+      const sono = lerSono();
 
       if (!nome || !periodo || isNaN(sono)) {
-        alert('Por favor, preencha todos os campos antes de continuar.');
+        mostrarModal("⚠️ Campos obrigatórios", "Por favor, preencha todos os campos antes de continuar.");
         return;
       }
 
-      if (sono < 7) {
+      if (sono > SONO_MAXIMO) {
         sonoInput.classList.add('input-error');
-        mostrarModal("😴 O descanso faz parte da aprovação!", "Definimos o mínimo de 7 horas de sono para garantir que sua mente esteja descansada e com boa retenção de conteúdo. Por favor, ajuste suas horas de sono.");
+        mostrarModal("⏰ Um dia tem só 24 horas!", "O limite máximo de horas de sono é " + SONO_MAXIMO + ". Por favor, ajuste o valor.");
+        return;
+      }
+
+      if (sono < SONO_MINIMO) {
+        sonoInput.classList.add('input-error');
+        mostrarModal("😴 O descanso faz parte da aprovação!", "Definimos o mínimo de " + SONO_MINIMO + " horas de sono para garantir que sua mente esteja descansada e com boa retenção de conteúdo. Por favor, ajuste suas horas de sono.");
         return;
       }
 

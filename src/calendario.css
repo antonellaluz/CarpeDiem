@@ -1,0 +1,1381 @@
+/* =========================================
+   CARPE DIEM — CALENDÁRIO
+   ========================================= */
+
+:root {
+    --roxo: #8170b8;
+    --roxo-escuro: #67559f;
+    --roxo-claro: #eeeafa;
+    --lilas: #f5f2fc;
+
+    --fundo: #f8f7fb;
+    --branco: #ffffff;
+
+    --texto: #343044;
+    --texto-suave: #918da0;
+
+    --borda: #eeeaf3;
+
+    --altura-hora: 60px;
+
+    --sombra: 0 4px 18px rgba(62, 48, 91, 0.06);
+}
+
+
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+   ========================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body.calendar-body {
+    min-height: 100vh;
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: 'Poppins', sans-serif;
+}
+
+button,
+a {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* =========================================
+   MENU LATERAL
+   ========================================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 82px;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 25px 12px;
+
+    background: var(--branco);
+    border-right: 1px solid var(--borda);
+
+    z-index: 100;
+}
+
+.logo-mini {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+
+    margin-bottom: 55px;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.nav-links a {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #aaa4b8;
+    font-size: 19px;
+
+    border-radius: 14px;
+    transition: 0.25s ease;
+}
+
+.nav-links a:hover {
+    color: var(--roxo);
+    background: var(--lilas);
+}
+
+.nav-links a.active {
+    color: #aaa4b8;
+    background: transparent;
+    box-shadow: none;
+}
+
+.nav-links a.active {
+    color: var(--roxo);
+    background: var(--lilas);
+    box-shadow: none;
+}
+
+/* =========================================
+   CONTEÚDO PRINCIPAL
+   ========================================= */
+
+.calendar-main-content {
+    margin-left: 82px;
+    width: calc(100% - 82px);
+
+    min-height: 100vh;
+    padding: 38px 42px 45px;
+}
+
+
+/* =========================================
+   CABEÇALHO
+   ========================================= */
+
+.calendar-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 28px;
+}
+
+.calendar-title-area h1 {
+    font-size: 27px;
+    font-weight: 600;
+    letter-spacing: -0.7px;
+    color: var(--texto);
+}
+
+#date-range-label {
+    margin-top: 5px;
+    font-size: 13px;
+    color: var(--texto-suave);
+    font-weight: 400;
+}
+
+.calendar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cal-icon-btn {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--borda);
+    border-radius: 13px;
+
+    background: var(--branco);
+    color: var(--roxo);
+
+    font-size: 17px;
+
+    transition: 0.25s ease;
+}
+
+.cal-icon-btn:hover {
+    background: var(--roxo);
+    color: var(--branco);
+    border-color: var(--roxo);
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   CARTÃO DA AGENDA SEMANAL
+   ========================================= */
+
+.schedule-card {
+    width: 100%;
+    background: var(--branco);
+
+    border: 1px solid var(--borda);
+    border-radius: 18px;
+
+    box-shadow: var(--sombra);
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   CABEÇALHO DOS DIAS
+   ========================================= */
+
+.calendar-header-days-row {
+    display: grid;
+    grid-template-columns: 70px repeat(7, minmax(0, 1fr));
+
+    background: var(--branco);
+
+    border-bottom: 1px solid var(--borda);
+}
+
+.calendar-header-days-row > div {
+    min-height: 68px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 5px;
+
+    color: #817c91;
+    font-size: 12px;
+    font-weight: 500;
+
+    border-right: 1px solid #f2eff6;
+}
+
+.calendar-header-days-row > div:first-child {
+    background: #fbfaff;
+}
+
+.calendar-header-days-row > div:last-child {
+    border-right: none;
+}
+
+/* Dia atual */
+
+.calendar-header-days-row .today,
+.calendar-header-days-row .current-day,
+.calendar-header-days-row .active {
+    color: var(--roxo-escuro);
+    background: var(--roxo-claro);
+    font-weight: 600;
+}
+
+
+/* =========================================
+   GRADE DE HORÁRIOS
+   ========================================= */
+
+.time-blocking-grid {
+    display: grid;
+    grid-template-columns: 70px repeat(7, minmax(0, 1fr));
+
+    position: relative;
+
+    width: 100%;
+    max-height: 650px;
+
+    overflow-y: auto;
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: #d9d1eb transparent;
+}
+
+.time-blocking-grid::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.time-blocking-grid::-webkit-scrollbar-thumb {
+    background: #d9d1eb;
+    border-radius: 10px;
+}
+
+
+/* =========================================
+   COLUNA DOS HORÁRIOS
+   ========================================= */
+
+.time-labels {
+    display: flex;
+    flex-direction: column;
+
+    background: #fbfaff;
+    border-right: 1px solid var(--borda);
+}
+
+.time-label {
+    height: var(--altura-hora);
+    min-height: var(--altura-hora);
+
+    display: flex;
+    justify-content: center;
+
+    padding-top: 5px;
+
+    color: #aaa5b5;
+    font-size: 11px;
+    font-weight: 500;
+
+    border-bottom: 1px solid #f1eef5;
+}
+
+
+/* =========================================
+   COLUNAS DOS DIAS
+   ========================================= */
+
+.day-column {
+    position: relative;
+
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    border-right: 1px solid #f1eef5;
+}
+
+.day-column:last-child {
+    border-right: none;
+}
+
+
+/* =========================================
+   ESPAÇOS DE CADA HORÁRIO
+   ========================================= */
+
+.time-slot {
+    position: relative;
+
+    height: var(--altura-hora);
+    min-height: var(--altura-hora);
+
+    border-bottom: 1px solid #f1eef5;
+
+    background: var(--branco);
+
+    transition: background 0.2s ease;
+}
+
+.time-slot:hover {
+    background: #faf8ff;
+}
+
+
+/* =========================================
+   CARTÕES DAS TAREFAS
+   ========================================= */
+
+.event-card {
+    position: absolute;
+    z-index: 3;
+
+    left: 4px;
+    right: 4px;
+
+    padding: 7px 8px;
+
+    overflow: hidden;
+
+    border-radius: 9px;
+
+    background: #eeeafa;
+    border-left: 3px solid var(--roxo);
+
+/*    color: #594b80;  */
+
+    font-size: 11px;
+    line-height: 1.4;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.event-card:hover {
+    filter: brightness(0.97);
+    transform: scale(0.99);
+}
+
+.event-card h3,
+.event-card strong {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.event-card p {
+    font-size: 10px;
+    color: inherit;
+    opacity: 0.8;
+}
+
+/* Categorias */
+
+.event-card.estudo {
+    background: #eeeafa;
+    border-left-color: #8874c1;
+    color: #594b80;
+}
+
+.event-card.descanso {
+    background: #e8f4ed;
+    border-left-color: #78ae8d;
+    color: #47775b;
+}
+
+.event-card.sono {
+    background: #e9edf9;
+    border-left-color: #8294c8;
+    color: #52638e;
+}
+
+.event-card.escola {
+    background: #fcefe5;
+    border-left-color: #d99b68;
+    color: #98643d;
+}
+
+.event-card.trabalho {
+    background: #f9e9ec;
+    border-left-color: #d78391;
+    color: #985360;
+}
+
+.event-card.compromisso {
+    background: #e9f1f7;
+    border-left-color: #79a9c9;
+    color: #4c718c;
+}
+
+.event-card.concluida {
+    opacity: 0.6;
+    filter: grayscale(0.3);
+}
+
+
+/* =========================================
+   LINHA DO HORÁRIO ATUAL
+   ========================================= */
+
+.current-time-line {
+    position: absolute;
+    z-index: 10;
+
+    left: 0;
+    right: 0;
+
+    height: 2px;
+
+    background: #e87582;
+
+    pointer-events: none;
+}
+
+.current-time-line::before {
+    content: "";
+
+    position: absolute;
+    left: -4px;
+    top: -4px;
+
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+    background: #e87582;
+}
+
+
+/* =========================================
+   CALENDÁRIO MENSAL
+   ========================================= */
+
+.monthly-wrapper {
+    width: 100%;
+
+    padding: 22px;
+
+    background: var(--branco);
+
+    border: 1px solid var(--borda);
+    border-radius: 18px;
+
+    box-shadow: var(--sombra);
+}
+
+.monthly-grid-header {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+
+    margin-bottom: 10px;
+}
+
+.monthly-grid-header > div {
+    padding: 13px 5px;
+
+    text-align: center;
+
+    color: var(--texto-suave);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.monthly-days-container {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+
+    gap: 7px;
+}
+
+.monthly-day {
+    min-height: 95px;
+
+    padding: 10px;
+
+    background: #fcfbfe;
+    border: 1px solid #f0edf5;
+    border-radius: 11px;
+
+    color: var(--texto);
+
+    transition: 0.2s ease;
+}
+
+.monthly-day:hover {
+    background: var(--lilas);
+    border-color: #d9d0ee;
+}
+
+.monthly-day.today {
+    background: var(--roxo-claro);
+    border: 1px solid #cfc3e9;
+}
+
+.monthly-day-number {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.monthly-day.other-month {
+    opacity: 0.35;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+   ========================================= */
+
+@media (max-width: 1000px) {
+
+    .calendar-main-content {
+        padding: 28px 22px;
+    }
+
+    .calendar-header-days-row {
+        grid-template-columns: 58px repeat(7, minmax(100px, 1fr));
+        min-width: 758px;
+    }
+
+    .time-blocking-grid {
+        grid-template-columns: 58px repeat(7, minmax(100px, 1fr));
+        min-width: 758px;
+    }
+
+    .schedule-card {
+        overflow-x: auto;
+    }
+
+    .monthly-day {
+        min-height: 75px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .sidebar {
+        top: auto;
+        bottom: 0;
+        left: 0;
+
+        width: 100%;
+        height: 66px;
+
+        padding: 5px 15px;
+
+        flex-direction: row;
+        justify-content: center;
+
+        border-right: none;
+        border-top: 1px solid var(--borda);
+    }
+
+    .logo-mini {
+        display: none;
+    }
+
+    .nav-links {
+        width: 100%;
+
+        flex-direction: row;
+        justify-content: space-around;
+
+        gap: 8px;
+    }
+
+    .nav-links a {
+        width: 43px;
+        height: 43px;
+    }
+
+    .calendar-main-content {
+        width: 100%;
+        margin-left: 0;
+
+        padding: 25px 14px 85px;
+    }
+
+    .calendar-header-bar {
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .calendar-title-area h1 {
+        font-size: 22px;
+    }
+
+    #date-range-label {
+        font-size: 11px;
+    }
+
+    .cal-icon-btn {
+        width: 39px;
+        height: 39px;
+    }
+
+    .monthly-wrapper {
+        padding: 12px;
+    }
+
+    .monthly-grid-header > div {
+        font-size: 10px;
+    }
+
+    .monthly-days-container {
+        gap: 4px;
+    }
+
+    .monthly-day {
+        min-height: 58px;
+        padding: 6px 4px;
+        border-radius: 7px;
+    }
+
+    .monthly-day-number {
+        font-size: 10px;
+    }
+
+}
+
+
+/* =========================================
+   ACESSIBILIDADE
+   ========================================= */
+
+button:focus-visible,
+a:focus-visible,
+.time-slot:focus-visible {
+    outline: 2px solid var(--roxo);
+    outline-offset: 3px;
+}
+
+/* =========================================
+   TIPOGRAFIA E IDENTIDADE VISUAL
+   ========================================= */
+
+body.calendar-body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+}
+
+.calendar-title-area h1 {
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #51436f;
+}
+
+#date-range-label {
+    font-weight: 500;
+    color: #a095bb;
+}
+
+.calendar-header-days-row > div {
+    font-weight: 600;
+    color: #8170a7;
+}
+
+.time-label {
+    font-weight: 500;
+    color: #a39ab5;
+}
+
+.event-card {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+}
+
+.event-card h3,
+.event-card strong {
+    font-weight: 700;
+}
+
+/* Destaque para o dia atual */
+.calendar-header-days-row .today,
+.calendar-header-days-row .current-day,
+.calendar-header-days-row .active {
+    background: linear-gradient(145deg, #8e7bc4, #7663ad);
+    color: #ffffff;
+    border-radius: 10px;
+}
+
+/* Efeito suave nos botões */
+.cal-icon-btn {
+    box-shadow: 0 3px 10px rgba(129, 112, 184, 0.08);
+}
+
+.cal-icon-btn:hover {
+    box-shadow: 0 6px 15px rgba(129, 112, 184, 0.2);
+}
+
+/* =========================================
+   RESPONSIVIDADE COMPLETA
+   ========================================= */
+
+/* TABLETS E TELAS MENORES */
+@media (max-width: 1000px) {
+
+    .calendar-main-content {
+        padding: 28px 22px;
+    }
+
+    .schedule-card {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .calendar-header-days-row,
+    .time-blocking-grid {
+        min-width: 850px;
+    }
+
+    .calendar-header-days-row {
+        grid-template-columns: 58px repeat(7, minmax(0, 1fr));
+    }
+
+    .time-blocking-grid {
+        grid-template-columns: 58px repeat(7, minmax(0, 1fr));
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .calendar-header-days-row > div {
+        font-size: 11px;
+    }
+
+    .monthly-day {
+        min-height: 75px;
+    }
+}
+
+/* CELULARES */
+@media (max-width: 650px) {
+
+    /* Menu inferior */
+    .sidebar {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+
+        width: 100%;
+        height: 68px;
+
+        padding: 6px 15px;
+
+        flex-direction: row;
+        justify-content: center;
+
+        background: #ffffff;
+        border-right: none;
+        border-top: 1px solid #eeeaf3;
+
+        box-shadow: 0 -4px 15px rgba(62, 48, 91, 0.06);
+    }
+
+    .logo-mini {
+        display: none;
+    }
+
+    .nav-links {
+        width: 100%;
+
+        flex-direction: row;
+        justify-content: space-around;
+
+        gap: 8px;
+    }
+
+    .nav-links a {
+        width: 44px;
+        height: 44px;
+
+        font-size: 18px;
+    }
+
+    /* Conteúdo */
+    .calendar-main-content {
+        width: 100%;
+        margin-left: 0;
+
+        padding: 23px 12px 90px;
+    }
+
+    /* Cabeçalho */
+    .calendar-header-bar {
+        align-items: center;
+        gap: 8px;
+
+        margin-bottom: 20px;
+    }
+
+    .calendar-title-area h1 {
+        font-size: 21px;
+    }
+
+    #date-range-label {
+        font-size: 11px;
+    }
+
+    .calendar-actions {
+        gap: 7px;
+    }
+
+    .cal-icon-btn {
+        width: 39px;
+        height: 39px;
+
+        border-radius: 11px;
+        font-size: 15px;
+    }
+
+    /* Agenda semanal */
+    .schedule-card {
+        width: 100%;
+        border-radius: 13px;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .calendar-header-days-row,
+    .time-blocking-grid {
+        min-width: 850px;
+    }
+
+    .calendar-header-days-row {
+        grid-template-columns: 55px repeat(7, minmax(0, 1fr));
+    }
+
+    .time-blocking-grid {
+        grid-template-columns: 55px repeat(7, minmax(0, 1fr));
+
+        max-height: 580px;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .calendar-header-days-row > div {
+        min-height: 60px;
+        font-size: 11px;
+        padding: 7px 3px;
+    }
+
+    .time-label {
+        font-size: 10px;
+    }
+
+    .event-card {
+        left: 3px;
+        right: 3px;
+        padding: 5px;
+
+        font-size: 10px;
+    }
+
+    /* Calendário mensal */
+    .monthly-wrapper {
+        padding: 10px;
+        border-radius: 13px;
+    }
+
+    .monthly-grid-header > div {
+        padding: 10px 2px;
+        font-size: 10px;
+    }
+
+    .monthly-days-container {
+        gap: 4px;
+    }
+
+    .monthly-day {
+        min-height: 57px;
+        padding: 5px 3px;
+
+        border-radius: 7px;
+    }
+
+    .monthly-day-number {
+        font-size: 10px;
+    }
+}
+
+/* CELULARES MUITO PEQUENOS
+
+*/
+@media (max-width: 380px) {
+
+    .calendar-main-content {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .calendar-title-area h1 {
+        font-size: 19px;
+    }
+
+    .cal-icon-btn {
+        width: 35px;
+        height: 35px;
+    }
+
+    .sidebar {
+        height: 62px;
+    }
+}
+
+/* Container de navegação móvel (aparece apenas no celular) */
+.mobile-day-nav {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    /* Mostra a barra de navegação de dias no celular */
+    .mobile-day-nav {
+        display: flex;
+    }
+
+    /* Esconde o cabeçalho padrão de 7 dias e mostra apenas 1 coluna por vez */
+    .calendar-header-days-row {
+        display: none !important;
+    }
+
+    /* Modifica o grid principal para mostrar apenas: 70px (horas) + 1fr (o dia ativo) */
+    .time-blocking-grid {
+        grid-template-columns: 70px 1fr !important;
+    }
+
+    /* Esconde todas as colunas de dias por padrão no celular */
+    .day-column {
+        display: none !important;
+    }
+
+    /* Mostra apenas a coluna do dia ativo atual */
+    .day-column.mobile-active {
+        display: block !important;
+    }
+}
+/* =========================================
+   CALENDÁRIO MENSAL INTERATIVO
+   ========================================= */
+
+.monthly-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.monthly-title {
+    flex: 1;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: #51436f;
+}
+
+.monthly-nav-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--borda);
+    border-radius: 11px;
+    background: var(--branco);
+    color: var(--roxo);
+    transition: 0.2s ease;
+}
+
+.monthly-nav-btn:hover {
+    background: var(--roxo);
+    color: #ffffff;
+    border-color: var(--roxo);
+}
+
+.monthly-today-btn {
+    height: 36px;
+    padding: 0 14px;
+    border: 1px solid #cfc3e9;
+    border-radius: 11px;
+    background: var(--roxo-claro);
+    color: var(--roxo-escuro);
+    font-size: 12px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.monthly-today-btn:hover {
+    background: #e3dcf6;
+}
+
+.monthly-day {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.monthly-day.domingo {
+    background: #faf7fc;
+}
+
+.monthly-day.domingo .monthly-day-number {
+    color: #b9a3c4;
+}
+
+.monthly-day.feriado .monthly-day-number {
+    color: #47775b;
+}
+
+.monthly-day-number {
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Hoje: número dentro de uma bolinha Carpe Diem */
+.monthly-day.today {
+    background: #fcfbfe;
+    border: 1px solid #f0edf5;
+}
+
+.monthly-day.today .monthly-day-number {
+    background: linear-gradient(145deg, #8e7bc4, #7663ad);
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(129, 112, 184, 0.35);
+}
+
+.monthly-day.selected {
+    background: var(--roxo-claro);
+    border-color: #b9aadf;
+    box-shadow: 0 0 0 2px rgba(129, 112, 184, 0.18);
+}
+
+.m-feriado {
+    font-size: 9px;
+    font-weight: 600;
+    color: #47775b;
+    background: #e8f4ed;
+    border-radius: 6px;
+    padding: 1px 6px;
+}
+
+.monthly-dots {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin-top: auto;
+}
+
+.m-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c, #8170b8);
+}
+
+/* Tarefa fixa: pontinho vazado */
+.m-dot.fixa {
+    background: transparent;
+    border: 2px solid var(--c, #8170b8);
+}
+
+.m-mais {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--texto-suave);
+}
+
+.monthly-legend {
+    display: flex;
+    gap: 18px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--texto-suave);
+}
+
+.monthly-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Painel do dia */
+.day-panel {
+    margin-top: 20px;
+    padding: 20px;
+    background: #fcfbfe;
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+}
+
+.dp-titulo {
+    font-size: 16px;
+    font-weight: 700;
+    color: #51436f;
+}
+
+.dp-sub {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--texto-suave);
+}
+
+.dp-lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 14px 0;
+}
+
+.dp-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-left: 4px solid var(--c, #8170b8);
+    border-radius: 12px;
+}
+
+.dp-item.concluida .dp-nome {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.dp-hora {
+    min-width: 92px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8170a7;
+}
+
+.dp-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.dp-nome {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--texto);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dp-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 3px;
+}
+
+.dp-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--roxo-claro);
+    color: var(--roxo-escuro);
+}
+
+.dp-tag.fixa {
+    background: #e9f1f7;
+    color: #4c718c;
+}
+
+.dp-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    background: var(--branco);
+    color: var(--roxo);
+    transition: 0.2s ease;
+}
+
+.dp-btn:hover {
+    background: var(--roxo);
+    color: #ffffff;
+}
+
+.dp-btn.perigo:hover {
+    background: #f87171;
+    border-color: #f87171;
+}
+
+.dp-vazio {
+    margin: 14px 0;
+    font-size: 13px;
+    color: var(--texto-suave);
+}
+
+.dp-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.dp-primario,
+.dp-secundario {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.dp-primario {
+    background: #c795b5;
+    color: #ffffff;
+}
+
+.dp-primario:hover {
+    filter: brightness(1.05);
+}
+
+.dp-secundario {
+    background: var(--lilas);
+    color: #8170a7;
+}
+
+.dp-secundario:hover {
+    background: var(--roxo-claro);
+}
+
+@media (max-width: 650px) {
+    .m-feriado { display: none; }
+    .monthly-day-number { width: 22px; height: 22px; font-size: 10px; }
+    .m-dot { width: 6px; height: 6px; }
+    .monthly-title { font-size: 15px; }
+    .dp-hora { min-width: 78px; font-size: 11px; }
+    .day-panel { padding: 14px; }
+}
+
+
+/* =========================================
+   ÍCONES DOS BOTÕES EM ROXO
+   (força o roxo Carpe Diem no lugar do preto)
+   ========================================= */
+
+.cal-icon-btn,
+.cal-icon-btn i,
+.cal-icon-btn span,
+.cal-icon-btn svg,
+.cal-icon-btn svg * ,
+.monthly-nav-btn,
+.monthly-nav-btn i,
+.monthly-nav-btn svg,
+.monthly-nav-btn svg *,
+.dp-btn,
+.dp-btn i,
+.dp-btn svg,
+.dp-btn svg *,
+.mobile-day-nav button,
+.mobile-day-nav button i,
+.mobile-day-nav button svg,
+.mobile-day-nav button svg * {
+    color: var(--roxo) !important;
+}
+
+/* Ícones SVG que usam fill/stroke próprios */
+.cal-icon-btn svg,
+.monthly-nav-btn svg,
+.dp-btn svg,
+.mobile-day-nav button svg {
+    fill: currentColor;
+}
+
+.cal-icon-btn svg *,
+.monthly-nav-btn svg *,
+.dp-btn svg *,
+.mobile-day-nav button svg * {
+    stroke: currentColor;
+}
+
+/* Ao passar o mouse: fundo roxo e ícone branco */
+.cal-icon-btn:hover,
+.cal-icon-btn:hover i,
+.cal-icon-btn:hover span,
+.cal-icon-btn:hover svg,
+.cal-icon-btn:hover svg *,
+.monthly-nav-btn:hover,
+.monthly-nav-btn:hover i,
+.monthly-nav-btn:hover svg,
+.monthly-nav-btn:hover svg *,
+.dp-btn:hover,
+.dp-btn:hover i,
+.dp-btn:hover svg,
+.dp-btn:hover svg * {
+    color: #ffffff !important;
+}
+
+/* Botões da navegação de dias no celular */
+.mobile-day-nav button {
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: 11px;
+}

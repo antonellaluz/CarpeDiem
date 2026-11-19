@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escolha seu vestibular - Carpe Diem</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#c795b5">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Garante que padding e bordas não estoure a largura em telas pequenas */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    /* Adaptação fluida do container principal */
+    .container {
+      width: 100%;
+      max-width: clamp(320px, 92vw, 900px);
+      margin: 0 auto;
+      padding: clamp(16px, 4vw, 40px);
+    }
+
+    .container h2 {
+      font-size: clamp(1.15rem, 2.5vw, 1.85rem);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* Lista flexível para mobile (1 coluna) */
+    .vest-lista {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(10px, 2vw, 18px);
+      margin-top: clamp(16px, 3vw, 28px);
+    }
+
+    /* Cards com tamanhos fluidos */
+    .vest-card {
+      display: flex;
+      align-items: center;
+      gap: clamp(12px, 2vw, 18px);
+      width: 100%;
+      padding: clamp(12px, 2.2vw, 22px);
+      text-align: left;
+      cursor: pointer;
+      background: #ffffff;
+      border: 2px solid #eee7f3;
+      border-radius: clamp(14px, 2vw, 20px);
+      color: #343044;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color .2s ease, transform .15s ease, box-shadow .2s ease;
+    }
+
+    .vest-card:hover,
+    .vest-card:focus-visible {
+      border-color: #c795b5;
+      box-shadow: 0 6px 18px rgba(129, 112, 184, .15);
+      outline: none;
+    }
+
+    .vest-card:active {
+      transform: scale(.98);
+    }
+
+    .vest-card:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .vest-icone {
+      flex: none;
+      width: clamp(42px, 5vw, 62px);
+      height: clamp(42px, 5vw, 62px);
+      border-radius: clamp(12px, 1.5vw, 18px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(18px, 2.2vw, 26px);
+      color: #ffffff;
+      background: linear-gradient(135deg, #c795b5, #8170b8);
+    }
+
+    .vest-nome {
+      font-size: clamp(14px, 1.6vw, 19px);
+      font-weight: 700;
+    }
+
+    .vest-desc {
+      margin-top: 3px;
+      font-size: clamp(12px, 1.2vw, 15px);
+      line-height: 1.45;
+      color: #918da0;
+    }
+
+    .vest-info {
+      display: block;
+      margin-top: clamp(14px, 2.5vw, 24px);
+      text-align: center;
+      min-height: 20px;
+      font-size: clamp(13px, 1.3vw, 16px);
+    }
+
+    /* Celulares muito pequenos (até 360px) */
+    @media (max-width: 360px) {
+      .vest-card {
+        padding: 10px 12px;
+        gap: 10px;
+      }
+      .vest-icone {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+      }
+    }
+
+    /* Tablets e Notebooks (a partir de 768px): organiza os cards em 2 colunas */
+    @media (min-width: 768px) {
+      .vest-lista {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-items: stretch;
+      }
+    }
+
+    /* Monitores grandes e TVs (a partir de 1440px) */
+    @media (min-width: 1440px) {
+      .container {
+        max-width: 1200px;
+      }
+      .container p {
+        font-size: 17px !important;
+      }
+      .vest-lista {
+        gap: 24px;
+      }
+      .vest-card:hover,
+      .vest-card:focus-visible {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 26px rgba(129, 112, 184, .2);
+      }
+    }
+
+    /* Telas Ultra-Wide / TVs 4K (a partir de 1920px) */
+    @media (min-width: 1920px) {
+      .container {
+        max-width: 1450px;
+      }
+      .logo-small {
+        max-width: 160px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="img/logo.png" alt="Carpe Diem" class="logo-small">
+
+    <h2>QUAL PROVA VOCÊ VAI FAZER?</h2>
+    <p style="font-size: 13px; color: var(--text-muted); text-align: center;">
+      Montamos seu cronograma de acordo com a prova. Você pode ajustar tudo depois.
+    </p>
+
+    <div class="vest-lista" id="vest-lista"></div>
+
+    <span id="info" class="duration-display vest-info"></span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="ui.js"></script>
+  <script src="regras.js"></script>
+  <script src="planos.js"></script>
+  <script>
+    // Sem período escolar, volta para o cadastro
+    if (!localStorage.getItem('carpeDiem_periodo')) {
+      window.location.href = 'cronograma-pronto.html';
+    }
+
+    const lista = document.getElementById('vest-lista');
+    const info = document.getElementById('info');
+
+    Object.entries(PLANOS).forEach(([chave, plano]) => {
+      const botao = document.createElement('button');
+      botao.type = 'button';
+      botao.className = 'vest-card';
+
+      const icone = document.createElement('span');
+      icone.className = 'vest-icone';
+      icone.innerHTML = `<i class="fa-solid ${plano.icone}"></i>`;
+
+      const texto = document.createElement('span');
+
+      const nome = document.createElement('div');
+      nome.className = 'vest-nome';
+      nome.textContent = plano.nome;
+
+      const desc = document.createElement('div');
+      desc.className = 'vest-desc';
+      desc.textContent = plano.descricao;
+
+      texto.append(nome, desc);
+      botao.append(icone, texto);
+
+      botao.addEventListener('click', () => escolher(chave));
+      lista.appendChild(botao);
+    });
+
+    async function escolher(chave) {
+      const botoes = lista.querySelectorAll('button');
+      botoes.forEach(b => b.disabled = true);
+
+      info.classList.remove('error-text');
+      info.textContent = 'Montando seu cronograma...';
+
+      try {
+        const criados = await escolherPlano(chave);
+
+        if (!criados) {
+          info.classList.add('error-text');
+          info.textContent = 'Não foi possível montar o cronograma. ' + (ultimoErroSupabase || 'Tente novamente.');
+          botoes.forEach(b => b.disabled = false);
+          return;
+        }
+
+        window.location.href = 'calendario.html';
+      } catch (erro) {
+        console.error(erro);
+        info.classList.add('error-text');
+        info.textContent = 'Algo deu errado. Tente novamente.';
+        botoes.forEach(b => b.disabled = false);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -8,7 +8,31 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#c795b5">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    #quote-author { display: block; margin-top: 4px; font-size: 11px; font-style: normal; font-weight: 600; opacity: 0.8; }
+
+    .task-item.clicavel { cursor: pointer; }
+    .task-item.concluida { opacity: 0.55; }
+    .task-item.concluida strong { text-decoration: line-through; }
+    .tarefas-vazio { color: #918da0; font-size: 14px; padding: 10px 4px; }
+    .tarefas-vazio a { color: #c795b5; font-weight: 600; text-decoration: none; }
+    .aviso-remanejamento { color: #918da0; font-size: 12px; margin: -6px 0 12px; }
+
+    .todo-vazio { list-style: none; color: #918da0; font-size: 13px; padding: 8px 4px; }
+    .todo-item .todo-remove { margin-left: auto; background: none; border: none; color: #b9aec4; font-size: 17px; line-height: 1; padding: 0 2px; cursor: pointer; }
+    .todo-item .todo-remove:hover { color: #c795b5; }
+    .todo-add { display: flex; gap: 8px; margin-top: 12px; }
+    .todo-add input { flex: 1; min-width: 0; padding: 9px 12px; border: 1px solid #eee7f3; border-radius: 12px; background: #fff; color: #343044; font: inherit; font-size: 13px; outline: none; }
+    .todo-add input:focus { border-color: #c795b5; }
+    .todo-add button { width: 38px; border: none; border-radius: 12px; background: #c795b5; color: #fff; cursor: pointer; }
+  </style>
 </head>
 <body class="dashboard-body">
   <aside class="sidebar">
@@ -21,68 +45,43 @@
     </div>
   </aside>
 
-  <main class="main-content"> 
-  <div class="header-section">
-    <div class="welcome-wrapper">
-      <div class="welcome-text">
-        <h1 id="greeting-title">Bom dia, Estudante!</h1>
-        <p id="current-date">Carregando data...</p>
+  <main class="main-content">
+    <div class="header-section">
+      <div class="welcome-wrapper">
+        <div class="welcome-text">
+          <h1 id="greeting-title">Bom dia, Estudante!</h1>
+          <p id="current-date">Carregando data...</p>
+        </div>
+        <img src="img/logo_minus.png" alt="Carpe Diem" class="logo-inline-mobile">
       </div>
-      <img src="img/logo_minus.png" alt="Carpe Diem" class="logo-inline-mobile">
+
+      <div class="quote-box">
+        <span id="quote-text">"Amanhã o conteúdo estará lá, você poderá recuperar. Mas a sua energia não. Descanse!"</span>
+        <small id="quote-author"></small>
+      </div>
     </div>
-  
-    <div class="quote-box">
-      "Amanhã o conteúdo estará lá, você poderá recuperar. Mas a sua energia não. Descanse!"
-    </div>
-  </div>
 
     <div class="dashboard-grid">
-      
+
       <div class="tasks-card">
         <h3>Tarefas do dia</h3>
-        <div id="tasks-container">
-          <div class="task-item">
-            <div class="task-time">
-              15:00h
-              <span>17:30h</span>
-            </div>
-            <div class="task-info">
-              <h4>Estudo de Matemática</h4>
-              <p>Matemática — Funções</p>
-            </div>
-          </div>
+        <p class="aviso-remanejamento" id="aviso-remanejamento" hidden></p>
 
-          <div class="task-item">
-            <div class="task-time">
-              19:35h
-              <span>21:00h</span>
-            </div>
-            <div class="task-info">
-              <h4>Redação Modelo ENEM</h4>
-              <p>Português — Argumentação</p>
-            </div>
-          </div>
+        <div id="tasks-container">
+          <p class="tarefas-vazio">Carregando tarefas...</p>
         </div>
       </div>
 
       <div class="side-cards">
-        
+
         <div class="todo-card">
           <h4>Não esquecer!</h4>
-          <ul class="todo-list" id="todo-list">
-            <li class="todo-item">
-              <input type="checkbox" onchange="toggleTodo(this)">
-              <span>Atividade de Sociologia</span>
-            </li>
-            <li class="todo-item completed">
-              <input type="checkbox" checked onchange="toggleTodo(this)">
-              <span>Levar Lily ao veterinário</span>
-            </li>
-            <li class="todo-item">
-              <input type="checkbox" onchange="toggleTodo(this)">
-              <span>Atividade do curso</span>
-            </li>
-          </ul>
+          <ul class="todo-list" id="todo-list"></ul>
+
+          <form class="todo-add" id="todo-form" autocomplete="off">
+            <input type="text" id="todo-input" placeholder="Adicionar lembrete..." maxlength="80">
+            <button type="submit" title="Adicionar lembrete"><i class="fa-solid fa-plus"></i></button>
+          </form>
         </div>
 
         <a href="formulario.html" class="card-action">
@@ -97,32 +96,231 @@
     </div>
   </main>
 
+  <!-- 1º Supabase, 2º regras.js, 3º frases.js (a ordem importa) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="ui.js"></script>
+  <script src="regras.js"></script>
+  <script src="planos.js"></script>
+  <script src="frases.js"></script>
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const nomeUsuario = localStorage.getItem('carpeDiem_nome');
-      if (nomeUsuario) {
-        document.getElementById('greeting-title').textContent = `Bom dia, ${nomeUsuario}!`;
+
+    // =========================================================
+    // CABEÇALHO
+    // =========================================================
+
+    function saudacao(hora) {
+      if (hora < 12) return 'Bom dia';
+      if (hora < 18) return 'Boa tarde';
+      return 'Boa noite';
+    }
+
+    function renderCabecalho() {
+      const agora = new Date();
+      const nome = localStorage.getItem('carpeDiem_nome') || 'Estudante';
+
+      document.getElementById('greeting-title').textContent =
+        `${saudacao(agora.getHours())}, ${nome}!`;
+
+      let data = agora.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'long' });
+      data = data.charAt(0).toUpperCase() + data.slice(1);
+
+      document.getElementById('current-date').textContent = data;
+    }
+
+    // =========================================================
+    // TAREFAS DO DIA
+    // =========================================================
+
+    function tarefasDeHoje() {
+      const hojeISO = formatarDataISO(new Date());
+
+      return eventosDaData(events, hojeISO)
+        .filter(e => horarioEmMinutos(e.startTime) !== null)
+        .sort((a, b) => a.startTime.localeCompare(b.startTime));
+    }
+
+    function corDaTarefa(cor) {
+      if (typeof cor === 'string' && cor.startsWith('#')) return cor;
+
+      const cores = {
+        blue: '#3b82f6',
+        purple: '#8170b8',
+        orange: '#f59e0b',
+        green: '#4ade80',
+        red: '#f87171'
+      };
+
+      return cores[cor] || '#8170b8';
+    }
+
+    function renderizarTarefasDoDia() {
+      const container = document.getElementById('tasks-container');
+      if (!container) return;
+
+      container.innerHTML = '';
+
+      const tarefasHoje = tarefasDeHoje();
+
+      if (tarefasHoje.length === 0) {
+        container.innerHTML =
+          '<p class="tarefas-vazio">Nenhuma tarefa agendada para hoje. <a href="adicionar_tarefa.html">Adicionar no cronograma</a></p>';
+        return;
       }
 
-      const optionsDate = { weekday: 'short', day: 'numeric', month: 'long' };
-      const now = new Date();
-      let dataFormatada = now.toLocaleDateString('pt-BR', optionsDate);
-      dataFormatada = dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
+      const lista = document.createElement('div');
+      lista.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
 
-      const horas = String(now.getHours()).padStart(2, '0');
-      const minutos = String(now.getMinutes()).padStart(2, '0');
+      tarefasHoje.forEach(tarefa => {
+        const item = document.createElement('div');
 
-      document.getElementById('current-date').textContent = `${dataFormatada} | ${horas}:${minutos}`;
-    });
+        item.className = `task-item clicavel ${tarefa.completed ? 'concluida' : ''}`;
+        item.style.cssText =
+          'display:flex;align-items:center;justify-content:space-between;gap:12px;' +
+          'padding:10px 12px;background:#f9f8fc;border-radius:8px;' +
+          `border-left:4px solid ${corDaTarefa(tarefa.color)};`;
 
-    function toggleTodo(checkbox) {
-      const li = checkbox.parentElement;
-      if (checkbox.checked) {
-        li.classList.add('completed');
-      } else {
-        li.classList.remove('completed');
+        const info = document.createElement('div');
+
+        const titulo = document.createElement('strong');
+        titulo.textContent = tarefa.title;
+
+        const detalhe = document.createElement('small');
+        detalhe.style.cssText = 'display:block;color:#64748b;margin-top:2px;';
+        detalhe.textContent =
+          `${tarefa.startTime} - ${tarefa.endTime} (${categoriaDe(tarefa)})`;
+
+        info.append(titulo, detalhe);
+
+        const caixa = document.createElement('input');
+        caixa.type = 'checkbox';
+        caixa.checked = Boolean(tarefa.completed);
+        caixa.style.cursor = 'pointer';
+        caixa.title = 'Marcar como concluída';
+
+        caixa.addEventListener('change', async () => {
+          caixa.disabled = true;
+          await alternarConclusao(tarefa.id);
+          renderizarTarefasDoDia();
+        });
+
+        item.append(info, caixa);
+        lista.appendChild(item);
+      });
+
+      container.appendChild(lista);
+    }
+
+    // =========================================================
+    // LEMBRETES ("Não esquecer!") — salvos neste navegador
+    // =========================================================
+
+    const CHAVE_LEMBRETES = 'carpeDiem_lembretes';
+
+    function lerLembretes() {
+      try {
+        const lista = JSON.parse(localStorage.getItem(CHAVE_LEMBRETES));
+        return Array.isArray(lista) ? lista : [];
+      } catch (erro) {
+        return [];
       }
     }
+
+    function salvarLembretes(lista) {
+      try {
+        localStorage.setItem(CHAVE_LEMBRETES, JSON.stringify(lista));
+      } catch (erro) {
+        console.error('Não foi possível salvar os lembretes:', erro);
+      }
+    }
+
+    function renderizarLembretes() {
+      const ul = document.getElementById('todo-list');
+      if (!ul) return;
+
+      ul.innerHTML = '';
+
+      const lembretes = lerLembretes();
+
+      if (!lembretes.length) {
+        const vazio = document.createElement('li');
+        vazio.className = 'todo-vazio';
+        vazio.textContent = 'Nenhum lembrete por enquanto.';
+        ul.appendChild(vazio);
+        return;
+      }
+
+      lembretes.forEach(l => {
+        const li = document.createElement('li');
+        li.className = 'todo-item';
+
+        const texto = document.createElement('span');
+        texto.textContent = l.texto;
+
+        const remover = document.createElement('button');
+        remover.type = 'button';
+        remover.className = 'todo-remove';
+        remover.title = 'Remover lembrete';
+        remover.textContent = '×';
+
+        remover.addEventListener('click', () => {
+          salvarLembretes(lerLembretes().filter(x => x.id !== l.id));
+          renderizarLembretes();
+        });
+
+        li.append(texto, remover);
+        ul.appendChild(li);
+      });
+    }
+
+    function configurarFormularioLembretes() {
+      const form = document.getElementById('todo-form');
+      const input = document.getElementById('todo-input');
+
+      if (!form || !input) return;
+
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const texto = input.value.trim();
+        if (!texto) return;
+
+        const lista = lerLembretes();
+        lista.push({ id: novoId(), texto });
+
+        salvarLembretes(lista);
+        input.value = '';
+        renderizarLembretes();
+      });
+    }
+
+    // =========================================================
+    // INICIALIZAÇÃO
+    // =========================================================
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      renderCabecalho();
+      renderizarLembretes();
+      configurarFormularioLembretes();
+
+      // Espera o Supabase responder ANTES de desenhar as tarefas
+      await carregarEventosDoSupabase();
+      renderizarTarefasDoDia();
+
+      // Atualiza ao voltar para a aba ou para a página
+      document.addEventListener('visibilitychange', async () => {
+        if (!document.hidden) {
+          await carregarEventosDoSupabase();
+          renderizarTarefasDoDia();
+        }
+      });
+
+      window.addEventListener('pageshow', async e => {
+        if (e.persisted) {
+          await carregarEventosDoSupabase();
+          renderizarTarefasDoDia();
+        }
+      });
+    });
   </script>
 </body>
 </html>

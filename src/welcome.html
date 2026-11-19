@@ -7,6 +7,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#c795b5">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,7 +23,7 @@
 
   <section id="choice-screen" class="screen hidden">
     <h2 class="choice-title">Como você quer organizar seus estudos hoje?</h2>
-    
+
     <div class="options-container">
       <button class="btn-option" onclick="selectOption('pronto')">Cronograma pronto</button>
       <button class="btn-option" onclick="selectOption('proprio')">Montar meu próprio cronograma</button>
@@ -51,7 +56,28 @@
       }
     });
 
+    function iniciarNovoUsuario() {
+      [
+        'carpeDiem_nome',
+        'carpeDiem_periodo',
+        'carpeDiem_sono',
+        'carpeDiem_lembretes',
+        'carpeDiem_tarefas',
+        'carpeDiemConfiguracao',
+        'carpeDiemQuestionario',
+        'carpeDiem_plano'
+      ].forEach(chave => localStorage.removeItem(chave));
+
+      const id = crypto.randomUUID
+        ? crypto.randomUUID()
+        : String(Date.now()) + Math.random().toString(16).slice(2);
+
+      localStorage.setItem('carpeDiem_usuario_id', id);
+    }
+
     function selectOption(option) {
+      iniciarNovoUsuario();
+
       if (option === 'pronto') {
         window.location.href = 'cronograma-pronto.html';
       } else {

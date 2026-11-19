@@ -1,192 +1,214 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cronograma</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cronograma | Carpe Diem</title>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#c795b5">
+    <link rel="apple-touch-icon" href="img/icon-192.png">
+
+    <link rel="stylesheet" href="calendario.css">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tira de dias do celular (aparece só em telas pequenas) -->
+    <style>
+        .mobile-week-strip {
+            display: none;
+            gap: 6px;
+            padding: 10px;
+            overflow-x: auto;
+            background: #ffffff;
+            border-bottom: 1px solid #eeeaf3;
+        }
+
+        .mobile-week-strip button {
+            flex: 1;
+            min-width: 42px;
+            padding: 8px 0;
+            border: none;
+            border-radius: 12px;
+            background: #f5f2fc;
+            color: #8170a7;
+            font: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.3;
+            cursor: pointer;
+        }
+
+        .mobile-week-strip button small {
+            display: block;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .mobile-week-strip button.hoje   { box-shadow: inset 0 0 0 2px #c8bde6; }
+        .mobile-week-strip button.ativo  { background: #8170b8; color: #ffffff; box-shadow: none; }
+
+        .calendar-actions { flex-wrap: wrap; justify-content: flex-end; }
+        .week-nav { display: flex; align-items: center; gap: 8px; }
+
+        @media (max-width: 768px) {
+            .mobile-week-strip { display: flex; }
+
+            /* mostra só o dia escolhido, sem rolagem lateral */
+            .schedule-card { overflow-x: hidden; }
+
+            .time-blocking-grid {
+                min-width: 0 !important;
+                grid-template-columns: 56px 1fr !important;
+                overflow-x: hidden;
+            }
+        }
+    </style>
+
+    <!-- Ordem: Supabase, ui.js, regras.js, notificacoes.js, calendario.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="ui.js" defer></script>
+    <script src="regras.js" defer></script>
+    <script src="planos.js" defer></script>
+    <script src="notificacoes.js" defer></script>
+    <script src="calendario.js" defer></script>
 </head>
+
 <body class="calendar-body">
 
-  <aside class="sidebar">
-    <img src="img/logo_minus.png" alt="Carpe Diem" class="logo-mini">
-    <div class="nav-links">
-      <a href="index.html" title="Início"><i class="fa-solid fa-house"></i></a>
-      <a href="calendario.html" class="active" title="Calendário/Cronograma"><i class="fa-solid fa-calendar-days"></i></a>
-      <a href="formulario.html" title="Formulário"><i class="fa-solid fa-file-lines"></i></a>
-      <a href="perfil.html" title="Perfil"><i class="fa-solid fa-user"></i></a>
-    </div>
-  </aside>
+    <aside class="sidebar">
 
-  <main class="calendar-main-content">
-    <div class="calendar-header-bar">
-      <div class="calendar-title-area">
-        <h1 id="page-main-title">Cronograma</h1>
-        <p id="date-range-label">25-31 Outubro <span>2026</span></p>
-      </div>
+        <img src="img/logo_minus.png" alt="Carpe Diem" class="logo-mini">
 
-      <div class="calendar-actions">
-        <a href="adicionar_tarefa.html" class="cal-icon-btn" title="Adicionar Tarefa"><i class="fa-solid fa-plus"></i></a>
-        <button class="cal-icon-btn" id="view-switch-btn" onclick="alternarModoCalendario()" title="Alternar para Calendário Mensal">
-          <i class="fa-regular fa-calendar" id="switch-icon"></i>
-        </button>
-      </div>
-    </div>
+        <div class="nav-links">
 
-    <div class="schedule-card" id="weekly-card-view">
-      <div class="time-blocking-grid" id="weekly-grid-container">
-      </div>
-    </div>
+            <a href="index.html" title="Início">
+                <i class="fa-solid fa-house"></i>
+            </a>
 
-    <div class="monthly-wrapper" id="monthly-card-view">
-      <div class="monthly-grid-header">
-        <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
-      </div>
-      <div class="monthly-days-container" id="monthly-grid-container">
-      </div>
-    </div>
-  </main>
+            <a href="calendario.html" class="active" title="Calendário/Cronograma">
+                <i class="fa-solid fa-calendar-days"></i>
+            </a>
 
-  <script>
-    let visualizacaoMensal = false;
+            <a href="formulario.html" title="Formulário">
+                <i class="fa-solid fa-file-lines"></i>
+            </a>
 
-    window.addEventListener('DOMContentLoaded', () => {
-      construirGridSemanal();
-    });
+            <a href="perfil.html" title="Perfil">
+                <i class="fa-solid fa-user"></i>
+            </a>
 
-    function alternarModoCalendario() {
-      visualizacaoMensal = !visualizacaoMensal;
-      const weeklyView = document.getElementById('weekly-card-view');
-      const monthlyView = document.getElementById('monthly-card-view');
-      const mainTitle = document.getElementById('page-main-title');
-      const switchIcon = document.getElementById('switch-icon');
+        </div>
+    </aside>
 
-      if (visualizacaoMensal) {
-        weeklyView.style.display = 'none';
-        monthlyView.style.display = 'block';
-        mainTitle.textContent = "Calendário Mensal";
-        switchIcon.className = "fa-solid fa-clock";
-        construirGridMensal();
-      } else {
-        weeklyView.style.display = 'block';
-        monthlyView.style.display = 'none';
-        mainTitle.textContent = "Cronograma";
-        switchIcon.className = "fa-regular fa-calendar";
-        construirGridSemanal();
-      }
-    }
 
-    function construirGridSemanal() {
-      const container = document.getElementById('weekly-grid-container');
-      const dateRangeLabel = document.getElementById('date-range-label');
-      
-      const hoje = new Date();
-      const ano = hoje.getFullYear();
-      const mesNome = hoje.toLocaleDateString('pt-BR', { month: 'long' });
-      dateRangeLabel.innerHTML = `Semana Atual <span>${ano}</span>`;
+    <main class="calendar-main-content">
 
-      let html = `<div></div>`;
-      
-      const nomeDias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-      const diaSemanaAtual = hoje.getDay();
-      
-      let primeiroDiaSemana = new Date(hoje);
-      primeiroDiaSemana.setDate(hoje.getDate() - diaSemanaActual(diaSemanaAtual));
+        <header class="calendar-header-bar">
 
-      let datasSemana = [];
-      for (let i = 0; i < 7; i++) {
-        let d = new Date(primeiroDiaSemana);
-        d.setDate(primeiroDiaSemana.getDate() + i);
-        datasSemana.push(d);
+            <div class="calendar-title-area">
+                <h1 id="page-main-title">Cronograma</h1>
+                <p id="date-range-label">Carregando datas...</p>
+            </div>
 
-        const isToday = d.toDateString() === new Date().toDateString();
-        html += `<div class="grid-col-header ${isToday ? 'active-day' : ''}">
-          ${d.getDate()} - ${nomeDias[i]}
-        </div>`;
-      }
+            <div class="calendar-actions">
 
-      const tarefasSalvas = JSON.parse(localStorage.getItem('carpeDiem_tarefas')) || [];
+                <!-- Semana anterior / esta semana / próxima (só na visão semanal) -->
+                <div class="week-nav" id="week-nav">
+                    <button type="button" class="cal-icon-btn" onclick="mudarSemana(-1)" title="Semana anterior">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
 
-      for (let h = 6; h <= 22; h++) {
-        const horaStr = String(h).padStart(2, '0') + ':00';
-        html += `<div class="time-row-label">${horaStr}</div>`;
+                    <button type="button" class="cal-icon-btn" onclick="irParaSemanaAtual()" title="Esta semana">
+                        <i class="fa-solid fa-calendar-day"></i>
+                    </button>
 
-        for (let d = 0; d < 7; d++) {
-          let dataFormatadaYMD = datasSemana[d].toISOString().split('T')[0];
-          
-          let tarefasDoSlot = tarefasSalvas.filter(t => {
-            if (t.data !== dataFormatadaYMD) return false;
-            if (!t.horaInicio) return false;
-            let horaInicioTarefa = parseInt(t.horaInicio.split(':')[0]);
-            return horaInicioTarefa === h;
-          });
+                    <button type="button" class="cal-icon-btn" onclick="mudarSemana(1)" title="Próxima semana">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
 
-          let conteudoCelula = '';
-          tarefasDoSlot.forEach(t => {
-            conteudoCelula += `<div class="scheduled-task-block" style="background-color: ${t.cor || '#fce1e8'};">
-              <div>
-                <div class="t-title">${t.titulo}</div>
-                <div class="t-time">${t.horaInicio} - ${t.horaFim || ''}</div>
-              </div>
-              <div class="t-category">${t.tipo || 'Estudo'}</div>
-            </div>`;
-          });
+                <a href="adicionar_tarefa.html" class="cal-icon-btn" title="Adicionar tarefa">
+                    <i class="fa-solid fa-plus"></i>
+                </a>
 
-          html += `<div class="time-slot-cell">${conteudoCelula}</div>`;
-        }
-      }
+                <button
+                    type="button"
+                    class="cal-icon-btn"
+                    id="view-switch-btn"
+                    onclick="alternarModoCalendario()"
+                    title="Alternar para calendário mensal"
+                >
+                    <i class="fa-regular fa-calendar" id="switch-icon"></i>
+                </button>
 
-      container.innerHTML = html;
-    }
+            </div>
 
-    function diaSemanaActual(dia) {
-      return dia;
-    }
+        </header>
 
-    function construirGridMensal() {
-      const container = document.getElementById('monthly-grid-container');
-      const dateRangeLabel = document.getElementById('date-range-label');
-      
-      const agora = new Date();
-      const ano = agora.getFullYear();
-      const mes = agora.getMonth();
+        <!-- Visão semanal (no celular mostra um dia por vez) -->
+        <section class="schedule-card" id="weekly-card-view">
 
-      dateRangeLabel.textContent = agora.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+            <div class="mobile-week-strip" id="mobile-week-strip"></div>
 
-      const primeiroDiaMes = new Date(ano, mes, 1).getDay();
-      const ultimoDiaMes = new Date(ano, mes + 1, 0).getDate();
-      const ultimoDiaMesAnterior = new Date(ano, mes, 0).getDate();
+            <div class="calendar-header-days-row" id="calendar-header-days"></div>
 
-      let html = '';
+            <div class="time-blocking-grid" id="weekly-grid-container">
 
-      for (let i = primeiroDiaMes - 1; i >= 0; i--) {
-        html += `<div class="month-cell muted"><span class="month-cell-number">${ultimoDiaMesAnterior - i}</span></div>`;
-      }
+                <div class="time-labels" id="timeLabels"></div>
 
-      const tarefasSalvas = JSON.parse(localStorage.getItem('carpeDiem_tarefas')) || [];
+                <div id="daysColumnsWrapper" style="display: contents;"></div>
 
-      for (let dia = 1; dia <= ultimoDiaMes; dia++) {
-        const dataStr = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
-        const tarefasDoDia = tarefasSalvas.filter(t => t.data === dataStr);
+            </div>
 
-        let badges = '';
-        tarefasDoDia.forEach(t => {
-          badges += `<div class="month-task-badge" style="background-color: ${t.cor || '#c795b5'}">${t.titulo}</div>`;
-        });
+        </section>
 
-        html += `<div class="month-cell">
-          <span class="month-cell-number">${dia}</span>
-          ${badges}
-        </div>`;
-      }
+        <!-- Visão mensal -->
+        <section class="monthly-wrapper" id="monthly-card-view" style="display: none;">
 
-      container.innerHTML = html;
-    }
-  </script>
+            <div class="monthly-toolbar">
+                <button type="button" class="monthly-nav-btn" onclick="mudarMes(-1)" title="Mês anterior">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <h2 class="monthly-title" id="month-title">Mês</h2>
+
+                <button type="button" class="monthly-nav-btn" onclick="mudarMes(1)" title="Próximo mês">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+                <button type="button" class="monthly-today-btn" onclick="irParaHoje()">Hoje</button>
+            </div>
+
+            <div class="monthly-grid-header">
+                <div>Dom</div>
+                <div>Seg</div>
+                <div>Ter</div>
+                <div>Qua</div>
+                <div>Qui</div>
+                <div>Sex</div>
+                <div>Sáb</div>
+            </div>
+
+            <div class="monthly-days-container" id="monthly-grid-container"></div>
+
+            <div class="monthly-legend">
+                <span><i class="m-dot" style="--c:#8170b8"></i> tarefa</span>
+                <span><i class="m-dot fixa" style="--c:#8170b8"></i> tarefa fixa</span>
+            </div>
+
+            <!-- Atividades do dia escolhido -->
+            <div class="day-panel" id="day-panel"></div>
+
+        </section>
+
+    </main>
+
 </body>
 </html>

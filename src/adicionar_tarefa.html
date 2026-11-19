@@ -4,12 +4,235 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adicionar Tarefa</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#c795b5">
+    <link rel="apple-touch-icon" href="img/icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Responsividade desta tela (celular e PC) -->
+    <style>
+        .pagina-tarefa,
+        .pagina-tarefa *,
+        .pagina-tarefa *::before,
+        .pagina-tarefa *::after {
+            box-sizing: border-box;
+        }
+
+        .pagina-tarefa {
+            margin: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .pagina-tarefa .container {
+            width: 100%;
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        .pagina-tarefa h1 {
+            text-align: center;
+            font-size: clamp(1rem, 4.5vw, 1.35rem);
+            margin-bottom: 20px;
+        }
+
+        .pagina-tarefa input[type="text"],
+        .pagina-tarefa input[type="date"],
+        .pagina-tarefa input[type="time"],
+        .pagina-tarefa select {
+            width: 100%;
+            max-width: 100%;
+            min-height: 44px;
+            font-size: 16px; /* evita zoom automático no iPhone */
+        }
+
+        .pagina-tarefa .row-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .pagina-tarefa .tipo-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pagina-tarefa .tipo-btn {
+            flex: 1 1 160px;
+            min-height: 44px;
+        }
+
+        .pagina-tarefa .color-picker-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pagina-tarefa .color-circle {
+            flex: 0 0 auto;
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+        }
+
+        .pagina-tarefa #estudo-campos {
+            display: block;
+        }
+
+        /* Categoria da tarefa fixa: ocupa a largura toda, alinhada à esquerda */
+        .pagina-tarefa #fixa-campos {
+            width: 100%;
+        }
+
+        .pagina-tarefa #fixa-campos .form-group {
+            width: 100%;
+            max-width: none;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        /* Botões lado a lado, na largura toda */
+        .pagina-tarefa .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .pagina-tarefa .button-group .btn-submit {
+            width: 100%;
+            min-height: 48px;
+            margin: 0;
+        }
+
+        .pagina-tarefa .btn-secondary {
+            background-color: #f3e8f0;
+            color: #7b5275;
+            border: 1px solid #c795b5;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .pagina-tarefa .btn-secondary:hover {
+            background-color: #ebd7e7;
+        }
+
+        .pagina-tarefa .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .pagina-tarefa .ajuda-botoes {
+            margin-top: 10px;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #918da0;
+            text-align: center;
+        }
+
+        /* Lista das tarefas já salvas nesta sessão */
+        .pagina-tarefa .resumo-sessao {
+            margin-top: 20px;
+            padding: 14px 16px;
+            border: 1px solid #eee7f3;
+            border-radius: 14px;
+            background: #fbf6fa;
+        }
+
+        .pagina-tarefa .resumo-sessao[hidden] {
+            display: none;
+        }
+
+        .pagina-tarefa .resumo-sessao h2 {
+            margin: 0 0 10px;
+            font-size: 13px;
+            color: #7b5275;
+        }
+
+        .pagina-tarefa .lista-adicionadas {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .pagina-tarefa .lista-adicionadas li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #343044;
+        }
+
+        .pagina-tarefa .lista-adicionadas .ponto {
+            flex: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .pagina-tarefa .lista-adicionadas .hora {
+            flex: none;
+            font-weight: 600;
+            color: #8170a7;
+            white-space: nowrap;
+        }
+
+        .pagina-tarefa .lista-adicionadas .nome {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Celulares pequenos */
+        @media (max-width: 480px) {
+            .pagina-tarefa { padding: 8px; }
+            .pagina-tarefa .container { padding: 20px 16px; }
+        }
+
+        @media (max-width: 340px) {
+            .pagina-tarefa .row-group { grid-template-columns: 1fr; }
+            .pagina-tarefa .button-group { grid-template-columns: 1fr; }
+        }
+
+        /* Tablets e PCs */
+        @media (min-width: 768px) {
+            .pagina-tarefa { padding: 40px 24px; }
+
+            .pagina-tarefa .container {
+                max-width: 700px;
+                padding: 36px 40px;
+            }
+
+            .pagina-tarefa #estudo-campos {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                column-gap: 16px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .pagina-tarefa .container { max-width: 760px; }
+        }
+    </style>
 </head>
-<body>
+<body class="pagina-tarefa">
     <div class="container">
         <h1>ADICIONAR TAREFA</h1>
 
@@ -21,7 +244,7 @@
         <div class="form-group">
             <label>Tipo de Tarefa:</label>
             <div class="tipo-container">
-                <button type="button" class="tipo-btn active" id="btn-variavel" onclick="setTipo('variavel')">Variável (Máx 2h)</button>
+                <button type="button" class="tipo-btn active" id="btn-variavel" onclick="setTipo('variavel')">Variável (ideal até 90 min)</button>
                 <button type="button" class="tipo-btn" id="btn-fixa" onclick="setTipo('fixa')">Fixa (Livre)</button>
             </div>
         </div>
@@ -43,6 +266,21 @@
         </div>
 
         <span id="duration-info" class="duration-display"></span>
+        <!-- Avisa na hora se o horário não pode ser usado (aula, sono, lazer, outra tarefa...) -->
+        <span id="restricao-info" class="duration-display"></span>
+
+        <!-- Só para tarefas fixas -->
+        <div id="fixa-campos" style="display: none;">
+            <div class="form-group">
+                <label>Categoria:</label>
+                <select id="task-category" onchange="atualizarDicaCategoria(); atualizarRestricoes()">
+                    <option value="COMPROMISSO" selected>Compromisso</option>
+                    <option value="EXERCICIO">Exercício / Lazer</option>
+                    <option value="TRABALHO">Trabalho</option>
+                </select>
+                <span id="categoria-dica" class="duration-display"></span>
+            </div>
+        </div>
 
         <div id="estudo-campos">
             <div class="form-group">
@@ -73,52 +311,213 @@
             </div>
         </div>
 
-        <button class="btn-submit" onclick="salvarTarefa()">Ok</button>
-    </div>
+        <div class="button-group">
+            <button class="btn-submit btn-secondary" id="btn-adicionar-mais" type="button" onclick="adicionarMais()">Adicionar</button>
+            <button class="btn-submit" id="btn-salvar" type="button" onclick="finalizar()">Ok</button>
+        </div>
 
-    <!-- Modal de Aviso -->
-    <div class="modal-overlay" id="modal-aviso">
-        <div class="modal-box">
-            <h3 id="modal-titulo">⚠️ Calma lá, vestibulando!</h3>
-            <p id="modal-texto">Mensagem de aviso aqui.</p>
-            <button class="modal-btn" onclick="focarCampoErro()">Alterar informação</button>
+        <p class="ajuda-botoes">
+            <strong>Adicionar</strong> salva esta tarefa e deixa você incluir outra.<br>
+            <strong>Ok</strong> salva e abre o cronograma.
+        </p>
+
+        <!-- Tarefas já salvas nesta visita -->
+        <div class="resumo-sessao" id="resumo-sessao" hidden>
+            <h2 id="resumo-titulo">Adicionadas agora</h2>
+            <ul class="lista-adicionadas" id="lista-adicionadas"></ul>
         </div>
     </div>
 
+    <!-- Ordem: Supabase, ui.js, regras.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="ui.js"></script>
+    <script src="regras.js"></script>
     <script>
-        const materiasAssuntos = {
-        "Matemática": ["Funções", "Geometria Plana", "Probabilidade", "Matrizes"],
-        "Física": ["Cinemática", "Dinâmica", "Termologia", "Óptica"],
-        "Química": ["Estequiometria", "Termoquímica", "Eletroquímica", "Química Orgânica"],
-        "Biologia": ["Citologia", "Genética", "Ecologia", "Fisiologia Humana"],
-        "Português": ["Crase", "Análise Sintática", "Figuras de Linguagem", "Modernismo"]
+    // Matérias organizadas por área do ENEM / vestibulares
+    const areasMaterias = {
+        "Linguagens": {
+            "Português": [
+                "Crase", "Análise Sintática", "Concordância Verbal e Nominal", "Regência Verbal e Nominal",
+                "Pontuação", "Semântica e Figuras de Linguagem", "Funções da Linguagem",
+                "Variação Linguística", "Morfologia e Classes de Palavras"
+            ],
+            "Literatura": [
+                "Trovadorismo e Humanismo", "Classicismo", "Barroco", "Arcadismo", "Romantismo",
+                "Realismo e Naturalismo", "Parnasianismo e Simbolismo", "Pré-Modernismo",
+                "Modernismo (1ª, 2ª e 3ª fases)", "Literatura Contemporânea", "Literatura Africana de Língua Portuguesa"
+            ],
+            "Interpretação de Texto e Gêneros Textuais": [
+                "Tipologia Textual", "Gêneros Textuais", "Interpretação de Texto",
+                "Intertextualidade", "Coesão e Coerência", "Texto Verbal e Não Verbal"
+            ],
+            "Inglês": [
+                "Interpretação de Texto", "Verb Tenses", "Vocabulário", "Conectivos",
+                "Phrasal Verbs", "Pronomes e Preposições"
+            ],
+            "Espanhol": [
+                "Interpretação de Texto", "Falsos Cognatos", "Heterossemânticos",
+                "Verbos e Tempos Verbais", "Pronomes", "Vocabulário"
+            ],
+            "Artes": [
+                "Artes Visuais", "Movimentos Artísticos", "Música", "Teatro e Dança",
+                "Cultura Popular Brasileira", "Arte Contemporânea"
+            ],
+            "Educação Física": [
+                "Cultura Corporal", "Esportes e Jogos", "Saúde e Qualidade de Vida",
+                "Ginástica e Dança", "Lutas"
+            ],
+            "Tecnologias da Informação": [
+                "Linguagens Digitais", "Redes Sociais e Mídias", "Cultura Digital"
+            ]
+        },
+        "Ciências Humanas": {
+            "História": [
+                "História Antiga", "Idade Média", "Idade Moderna", "Brasil Colônia", "Brasil Império",
+                "República Velha", "Era Vargas", "Ditadura Militar e Redemocratização",
+                "Revolução Industrial", "Revolução Francesa e Iluminismo", "Imperialismo",
+                "Primeira Guerra Mundial", "Segunda Guerra Mundial", "Guerra Fria",
+                "História da África e Cultura Indígena", "História Contemporânea"
+            ],
+            "Geografia": [
+                "Cartografia", "Geomorfologia e Relevo", "Climatologia", "Hidrografia",
+                "Biomas e Domínios Morfoclimáticos", "Questões Ambientais", "Urbanização",
+                "Demografia", "Agropecuária", "Industrialização", "Geopolítica e Globalização",
+                "Fontes de Energia", "Regionalização do Brasil"
+            ],
+            "Filosofia": [
+                "Pré-Socráticos", "Sócrates, Platão e Aristóteles", "Filosofia Medieval",
+                "Racionalismo e Empirismo", "Iluminismo", "Ética e Moral", "Filosofia Política",
+                "Existencialismo", "Filosofia Contemporânea", "Teoria do Conhecimento"
+            ],
+            "Sociologia": [
+                "Clássicos (Durkheim, Weber e Marx)", "Cultura e Identidade", "Desigualdade Social",
+                "Trabalho e Capitalismo", "Movimentos Sociais", "Cidadania e Direitos Humanos",
+                "Poder, Estado e Política", "Indústria Cultural e Meios de Comunicação"
+            ],
+            "Atualidades": [
+                "Política Nacional", "Política Internacional", "Meio Ambiente", "Economia",
+                "Tecnologia e Sociedade", "Direitos Humanos"
+            ]
+        },
+        "Ciências da Natureza": {
+            "Física": [
+                "Cinemática", "Dinâmica", "Estática", "Trabalho, Energia e Potência", "Gravitação",
+                "Hidrostática", "Termologia", "Termodinâmica", "Óptica", "Ondulatória",
+                "Eletrostática", "Eletrodinâmica", "Eletromagnetismo", "Física Moderna"
+            ],
+            "Química": [
+                "Estrutura Atômica", "Tabela Periódica", "Ligações Químicas", "Funções Inorgânicas",
+                "Estequiometria", "Soluções", "Termoquímica", "Cinética Química", "Equilíbrio Químico",
+                "Eletroquímica", "Química Orgânica", "Radioatividade", "Química Ambiental"
+            ],
+            "Biologia": [
+                "Citologia", "Bioquímica", "Metabolismo Energético", "Genética", "Evolução",
+                "Ecologia", "Fisiologia Humana", "Botânica", "Zoologia",
+                "Microbiologia e Doenças", "Biotecnologia", "Embriologia e Histologia"
+            ]
+        },
+        "Matemática": {
+            "Matemática": [
+                "Operações e Conjuntos Numéricos", "Razão e Proporção", "Porcentagem", "Regra de Três",
+                "Juros Simples e Compostos", "Equações e Inequações", "Funções", "Função Afim e Quadrática",
+                "Função Exponencial e Logarítmica", "Progressões (PA e PG)", "Matrizes e Sistemas Lineares",
+                "Geometria Plana", "Geometria Espacial", "Geometria Analítica", "Trigonometria",
+                "Análise Combinatória", "Probabilidade", "Estatística", "Polinômios e Números Complexos",
+                "Escalas e Unidades de Medida"
+            ]
+        },
+        "Redação": {
+            "Redação": [
+                "Estrutura Dissertativo-Argumentativa", "As 5 Competências do ENEM", "Proposta de Intervenção",
+                "Repertório Sociocultural", "Tema e Tese", "Coesão Textual", "Temas Frequentes do ENEM"
+            ]
+        }
     };
+
+    // Lista plana (matéria -> assuntos), usada pelo restante da página
+    const materiasAssuntos = {};
+    Object.values(areasMaterias).forEach(grupo => Object.assign(materiasAssuntos, grupo));
+
+    const DICAS_CATEGORIA = {
+        COMPROMISSO: "Não conta nas horas de estudo, mas ocupa o horário.",
+        EXERCICIO: "Não conta nas horas de estudo e pode usar o horário de lazer.",
+        TRABALHO: "Conta nas horas do dia e da semana, como o estudo."
+    };
+
+    const el = id => document.getElementById(id);
 
     let tipoAtual = 'variavel';
     let corSelecionada = '#c795b5';
+    let salvando = false;
 
-    window.addEventListener('DOMContentLoaded', () => {
-        const subjectSelect = document.getElementById('task-subject');
+    // Tarefas salvas nesta visita à página (para a lista "Adicionadas agora")
+    const adicionadas = [];
+
+    window.addEventListener('DOMContentLoaded', async () => {
+        const subjectSelect = el('task-subject');
         if (subjectSelect) {
-            for (let materia in materiasAssuntos) {
-                let option = document.createElement('option');
-                option.value = materia;
-                option.textContent = materia;
-                subjectSelect.appendChild(option);
+            for (const area in areasMaterias) {
+                const grupo = document.createElement('optgroup');
+                grupo.label = area;
+
+                for (const materia in areasMaterias[area]) {
+                    const option = document.createElement('option');
+                    option.value = materia;
+                    option.textContent = materia;
+                    grupo.appendChild(option);
+                }
+
+                subjectSelect.appendChild(grupo);
             }
         }
+
+        ['task-date', 'task-start', 'task-end'].forEach(id => {
+            const campo = el(id);
+            campo.addEventListener('input', atualizarRestricoes);
+            campo.addEventListener('change', atualizarRestricoes);
+        });
+
+        atualizarDicaCategoria();
+
+        // Preenche data e horários vindos do calendário
+        preencherPeloCalendario();
+
+        // Carrega as tarefas existentes para a validação de conflitos e limites
+        await carregarEventosDoSupabase();
+
+        calcularDuracao();
+        atualizarRestricoes();
     });
 
+    // Lê ?data=AAAA-MM-DD&inicio=HH:MM&fim=HH:MM da URL
+    function preencherPeloCalendario() {
+        const params = new URLSearchParams(window.location.search);
+
+        const data = params.get('data');
+        const inicio = params.get('inicio');
+        const fim = params.get('fim');
+
+        if (data && /^\d{4}-\d{2}-\d{2}$/.test(data)) {
+            el('task-date').value = data;
+        }
+        if (inicio && /^\d{2}:\d{2}$/.test(inicio)) {
+            el('task-start').value = inicio;
+        }
+        if (fim && /^\d{2}:\d{2}$/.test(fim)) {
+            el('task-end').value = fim;
+        }
+    }
+
     function atualizarAssuntos() {
-        const materiaSelecionada = document.getElementById('task-subject').value;
-        const topicSelect = document.getElementById('task-topic');
+        const materiaSelecionada = el('task-subject').value;
+        const topicSelect = el('task-topic');
         if (!topicSelect) return;
 
         topicSelect.innerHTML = '<option value="" disabled selected>Selecione o assunto</option>';
 
         if (materiasAssuntos[materiaSelecionada]) {
             materiasAssuntos[materiaSelecionada].forEach(assunto => {
-                let option = document.createElement('option');
+                const option = document.createElement('option');
                 option.value = assunto;
                 option.textContent = assunto;
                 topicSelect.appendChild(option);
@@ -126,23 +525,27 @@
         }
     }
 
+    function atualizarDicaCategoria() {
+        const dica = el('categoria-dica');
+        const categoria = el('task-category').value;
+
+        if (dica) dica.textContent = DICAS_CATEGORIA[categoria] || '';
+    }
+
     function setTipo(tipo) {
         tipoAtual = tipo;
-        ['variavel', 'fixa', 'lembrete'].forEach(t => {
-            const btn = document.getElementById(`btn-${t}`);
+
+        ['variavel', 'fixa'].forEach(t => {
+            const btn = el(`btn-${t}`);
             if (btn) btn.classList.toggle('active', tipo === t);
         });
 
-        const estudoCampos = document.getElementById('estudo-campos');
-        if (estudoCampos) {
-            if (tipo === 'fixa' || tipo === 'lembrete') {
-                estudoCampos.style.display = 'none';
-            } else {
-                estudoCampos.style.display = 'block';
-            }
-        }
+        // '' devolve o display definido no CSS (bloco no celular, grade no PC)
+        el('estudo-campos').style.display = tipo === 'fixa' ? 'none' : '';
+        el('fixa-campos').style.display = tipo === 'fixa' ? 'block' : 'none';
 
         calcularDuracao();
+        atualizarRestricoes();
     }
 
     function selecionarCor(hex, elemento) {
@@ -157,10 +560,10 @@
     }
 
     function calcularDuracao() {
-        const horaInicio = document.getElementById('task-start').value;
-        const horaFim = document.getElementById('task-end').value;
-        const display = document.getElementById('duration-info');
-        const inputFim = document.getElementById('task-end');
+        const horaInicio = el('task-start').value;
+        const horaFim = el('task-end').value;
+        const display = el('duration-info');
+        const inputFim = el('task-end');
 
         if (!display || !inputFim) return 0;
 
@@ -174,7 +577,7 @@
         const [hI, mI] = horaInicio.split(':').map(Number);
         const [hF, mF] = horaFim.split(':').map(Number);
 
-        let minutosTotais = (hF * 60 + mF) - (hI * 60 + mI);
+        const minutosTotais = (hF * 60 + mF) - (hI * 60 + mI);
 
         if (minutosTotais <= 0) {
             display.textContent = 'O horário de término deve ser posterior ao início.';
@@ -190,88 +593,278 @@
         if (horas > 0) textoDuracao += `${horas}h `;
         if (minutos > 0) textoDuracao += `${minutos}min`;
 
-        const horasDecimais = minutosTotais / 60;
-
-        if (tipoAtual === 'variavel' && horasDecimais > 2) {
-            display.textContent = `${textoDuracao} — Excede o limite de 2h!`;
-            display.classList.add('error-text');
-            inputFim.classList.add('input-error');
+        // Acima de 90 min é só uma recomendação (não bloqueia)
+        if (tipoAtual === 'variavel' && minutosTotais > 90) {
+            display.textContent = `${textoDuracao} — acima de 90 min, vale dividir em blocos com pausa.`;
         } else {
             display.textContent = textoDuracao;
-            display.classList.remove('error-text');
-            inputFim.classList.remove('input-error');
         }
 
-        return horasDecimais;
+        display.classList.remove('error-text');
+        inputFim.classList.remove('input-error');
+
+        return minutosTotais / 60;
     }
 
-    function mostrarModal(titulo, texto) {
-        const modalTitulo = document.getElementById('modal-titulo');
-        const modalTexto = document.getElementById('modal-texto');
-        const modalAviso = document.getElementById('modal-aviso');
+    function montarTarefa() {
+        const dataInput = el('task-date').value;
+        const inicio = el('task-start').value;
+        const fim = el('task-end').value;
 
-        if (modalTitulo) modalTitulo.textContent = titulo;
-        if (modalTexto) modalTexto.textContent = texto;
-        if (modalAviso) modalAviso.classList.add('show');
-        else alert(`${titulo}\n\n${texto}`);
+        if (!dataInput || !inicio || !fim) return null;
+
+        const [ano, mes, dia] = dataInput.split('-').map(Number);
+        const variavel = tipoAtual === 'variavel';
+
+        return {
+            id: novoId(),
+            title: el('task-name').value.trim(),
+            startTime: inicio,
+            endTime: fim,
+            color: corSelecionada,
+            category: variavel ? 'ESTUDO' : el('task-category').value,
+            day: new Date(ano, mes - 1, dia).getDay(),
+            date: dataInput,
+            completed: false,
+            fixed: tipoAtual === 'fixa',
+            subject: variavel ? (el('task-subject').value || null) : null,
+            topic: variavel ? (el('task-topic').value || null) : null
+        };
     }
 
-    function focarCampoErro() {
-        const modalAviso = document.getElementById('modal-aviso');
-        if (modalAviso) modalAviso.classList.remove('show');
-        const inputFim = document.getElementById('task-end');
-        if (inputFim) inputFim.focus();
+    function atualizarRestricoes() {
+        const info = el('restricao-info');
+        if (!info) return;
+
+        info.textContent = '';
+        info.classList.remove('error-text');
+
+        const tarefa = montarTarefa();
+        if (!tarefa) return;
+
+        const inicio = horarioEmMinutos(tarefa.startTime);
+        const fim = horarioEmMinutos(tarefa.endTime);
+
+        if (inicio === null || fim === null || fim <= inicio) return;
+
+        const resultado = validarTarefa(events, tarefa);
+
+        if (!resultado.ok) {
+            info.textContent = resultado.erros.join(' ');
+            info.classList.add('error-text');
+        }
     }
 
-    function salvarTarefa(event) {
-        if (event) event.preventDefault();
+    // Único aviso desta página: usa o modal padrão do ui.js (avisar)
+    // e devolve o foco ao campo indicado (padrão: Término).
+    function mostrarAviso(titulo, texto, campoFoco = 'task-end') {
+        const limpo = titulo.replace(/^[^\p{L}\p{N}]+/u, '');
 
-        const titulo = document.getElementById('task-name').value;
-        const dataInput = document.getElementById('task-date') ? document.getElementById('task-date').value : '';
+        return avisar(texto, { titulo: limpo, tipo: 'aviso' }).then(() => {
+            const campo = el(campoFoco);
+            if (campo) campo.focus();
+        });
+    }
+
+    // =========================================================
+    // VÁRIAS TAREFAS DE UMA VEZ
+    // =========================================================
+
+    function travarBotoes(travar) {
+        el('btn-adicionar-mais').disabled = travar;
+        el('btn-salvar').disabled = travar;
+    }
+
+    // Há algo digitado no formulário? (o início sozinho não conta,
+    // porque ele vem preenchido com o término da tarefa anterior)
+    function formularioTemConteudo() {
+        return Boolean(
+            el('task-name').value.trim() ||
+            el('task-end').value ||
+            el('task-subject').value
+        );
+    }
+
+    function dataCurta(iso) {
+        const [, m, d] = iso.split('-');
+        return `${d}/${m}`;
+    }
+
+    function renderAdicionadas() {
+        const caixa = el('resumo-sessao');
+        const lista = el('lista-adicionadas');
+
+        lista.replaceChildren();
+
+        adicionadas.forEach(t => {
+            const li = document.createElement('li');
+
+            const ponto = document.createElement('span');
+            ponto.className = 'ponto';
+            ponto.style.background = t.color;
+
+            const hora = document.createElement('span');
+            hora.className = 'hora';
+            hora.textContent = `${dataCurta(t.date)} · ${t.startTime}–${t.endTime}`;
+
+            const nome = document.createElement('span');
+            nome.className = 'nome';
+            nome.textContent = t.title;
+
+            li.append(ponto, hora, nome);
+            lista.appendChild(li);
+        });
+
+        el('resumo-titulo').textContent =
+            adicionadas.length === 1 ? '1 tarefa adicionada agora' : `${adicionadas.length} tarefas adicionadas agora`;
+
+        caixa.hidden = adicionadas.length === 0;
+    }
+
+    // Valida e grava a tarefa que está no formulário.
+    // Retorna "ok", "cancelado" (a pessoa preferiu ajustar) ou "erro".
+    async function gravarTarefaAtual() {
+        const titulo = el('task-name').value.trim();
+        const dataInput = el('task-date').value;
         const duracaoHoras = calcularDuracao();
-        let campoParaAlterar = "";
 
-        if (!titulo || !dataInput) {
-            mostrarModal("⚠️ Campos obrigatórios", "Você precisa preencher o Título e selecionar uma Data válida.");
-            return;
+        if (!titulo) {
+            mostrarAviso("⚠️ Campo obrigatório", "Você precisa preencher o nome da tarefa.", 'task-name');
+            return "erro";
+        }
+
+        if (!dataInput) {
+            mostrarAviso("⚠️ Campo obrigatório", "Você precisa selecionar uma data válida.", 'task-date');
+            return "erro";
         }
 
         if (duracaoHoras <= 0) {
-            mostrarModal("⚠️ Horário Inválido", "O horário de término está incorreto. Por favor, ajuste o campo de Horário de Término.");
-            return;
+            mostrarAviso("⚠️ Horário inválido", "Confira o início e o término da tarefa. O término precisa vir depois do início.");
+            return "erro";
         }
 
-        if (dataInput) {
-            const dataObj = new Date(dataInput + 'T00:00:00');
-            const diaSemana = dataObj.getDay();
-            if (diaSemana === 0 && tipoAtual === 'variavel') {
-                mostrarModal("⚠️ Ação não permitida", "Você não pode agendar tarefas variáveis aos domingos. Apenas tarefas fixas são permitidas");
-                return;
+        // Garante que a validação use os dados mais recentes do banco
+        // (inclusive as tarefas que você acabou de adicionar)
+        await carregarEventosDoSupabase();
+
+        const novaTarefa = montarTarefa();
+        const resultado = validarTarefa(events, novaTarefa);
+
+        if (!resultado.ok) {
+            mostrarAviso("⚠️ Não foi possível agendar", resultado.erros.join("\n\n"));
+            return "erro";
+        }
+
+        if (resultado.avisos.length) {
+            const continuar = await confirmar(resultado.avisos.join("\n\n"), {
+                titulo: "Quer salvar mesmo assim?",
+                confirmar: "Salvar mesmo assim",
+                cancelar: "Ajustar",
+                tipo: "aviso"
+            });
+
+            if (!continuar) return "cancelado";
+        }
+
+        events.push(novaTarefa);
+        const salvou = await salvarEventosSalvos(events);
+
+        if (!salvou) {
+            events = events.filter(e => e.id !== novaTarefa.id);
+            mostrarAviso(
+                "⚠️ Erro ao salvar",
+                "A tarefa não foi gravada no banco de dados.\n\nMotivo: " + ultimoErroSupabase
+            );
+            return "erro";
+        }
+
+        adicionadas.push(novaTarefa);
+        renderAdicionadas();
+
+        return "ok";
+    }
+
+    // Limpa o formulário para a próxima tarefa. A data, o tipo e a cor ficam;
+    // o início da próxima já vem com o término da anterior.
+    function prepararProxima(tarefaSalva) {
+        el('task-name').value = '';
+        el('task-subject').selectedIndex = 0;
+        atualizarAssuntos();
+
+        el('task-start').value = tarefaSalva.endTime;
+        el('task-end').value = '';
+
+        calcularDuracao();
+        atualizarRestricoes();
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        el('task-name').focus();
+    }
+
+    // Botão "Adicionar": salva e continua na página
+    async function adicionarMais() {
+        if (salvando) return;
+
+        salvando = true;
+        travarBotoes(true);
+
+        try {
+            const resultado = await gravarTarefaAtual();
+
+            if (resultado === "ok") {
+                const ultima = adicionadas[adicionadas.length - 1];
+
+                prepararProxima(ultima);
+                toast("Tarefa adicionada! Pode incluir a próxima 💜", "sucesso", 2200);
             }
+        } catch (erro) {
+            console.error("Erro ao adicionar a tarefa:", erro);
+            mostrarAviso("⚠️ Erro ao salvar", "Não foi possível salvar a tarefa. Verifique sua conexão e tente novamente.");
+        } finally {
+            salvando = false;
+            travarBotoes(false);
+        }
+    }
+
+    // Botão "Ok": salva o que estiver no formulário (se houver) e vai para o cronograma
+    async function finalizar() {
+        if (salvando) return;
+
+        salvando = true;
+        travarBotoes(true);
+
+        let podeSair = false;
+
+        try {
+            if (formularioTemConteudo()) {
+                podeSair = (await gravarTarefaAtual()) === "ok";
+            } else if (adicionadas.length) {
+                podeSair = true;
+            } else {
+                mostrarAviso("⚠️ Nada para salvar", "Preencha uma tarefa antes de continuar.", 'task-name');
+            }
+        } catch (erro) {
+            console.error("Erro ao salvar a tarefa:", erro);
+            mostrarAviso("⚠️ Erro ao salvar", "Não foi possível salvar a tarefa. Verifique sua conexão e tente novamente.");
         }
 
-        if (tipoAtual === 'variavel' && duracaoHoras > 2) {
-            mostrarModal("⚠️ Calma lá, vestibulando!", "Percebemos que você agendou mais de 2 horas seguidas para estudar, isso reduz sua retenção de conteúdo e aumenta o cansaço visual e mental.");
+        if (!podeSair) {
+            salvando = false;
+            travarBotoes(false);
             return;
         }
 
-        const novaTarefa = {
-            titulo,
-            tipo: tipoAtual,
-            data: dataInput,
-            horaInicio: document.getElementById('task-start').value,
-            horaFim: document.getElementById('task-end').value,
-            cor: corSelecionada,
-            materia: tipoAtual === 'variavel' ? document.getElementById('task-subject').value : null,
-            assunto: tipoAtual === 'variavel' ? document.getElementById('task-topic').value : null
-        };
+        // Os botões ficam travados até a página trocar
+        toast(
+            adicionadas.length === 1
+                ? "Tarefa salva com sucesso! 💜"
+                : `${adicionadas.length} tarefas salvas com sucesso! 💜`,
+            "sucesso",
+            1600
+        );
 
-        let tarefas = JSON.parse(localStorage.getItem('carpeDiem_tarefas')) || [];
-        tarefas.push(novaTarefa);
-        localStorage.setItem('carpeDiem_tarefas', JSON.stringify(tarefas));
-
-        alert("Tarefa salva com sucesso!");
-
+        // Dá tempo de ver a mensagem antes de voltar ao calendário
+        await new Promise(r => setTimeout(r, 1000));
         window.location.href = 'calendario.html';
     }
     </script>

@@ -1,0 +1,310 @@
+:root {
+  --bg-page: #f5f6f8;
+  --card-bg: #ffffff;
+  --header-lilac: #fcf1f5;
+  --accent-mauve: #c28cb0;
+  --accent-mauve-hover: #ae769b;
+  --text-dark: #1a1a1a;
+  --border-light: #eaeaea;
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Layout Geral para Telas Grandes (Sidebar + Conteúdo) */
+.page-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* --- SIDEBAR (Telas Grandes) --- */
+.sidebar {
+  display: none; /* Oculto por padrão em celulares */
+}
+
+.logo-mobile {
+  display: block;
+  width: 48px;
+  height: auto;
+  margin-bottom: 12px;
+}
+
+/* --- CONTEÚDO PRINCIPAL (MOBILE PADRÃO) --- */
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 16px 90px 16px; /* Espaço embaixo para a bottom-nav */
+}
+
+.container {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--card-bg);
+  border-radius: 28px;
+  padding: 24px 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 18px;
+  align-self: flex-start;
+}
+
+.cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Cartões de Pergunta */
+.form-group {
+  width: 100%;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  padding: 14px;
+  border: 1px solid #f8f8f8;
+  display: flex;
+  flex-direction: column;
+}
+
+.question-header {
+  background-color: var(--header-lilac);
+  color: var(--text-dark);
+  font-weight: 700;
+  font-size: 0.84rem;
+  text-align: center;
+  padding: 12px 10px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  line-height: 1.35;
+  box-shadow: 0 2px 8px rgba(194, 140, 176, 0.08);
+}
+
+/* Opções em formato de lista ou grid flexível */
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  line-height: 1.3;
+  padding: 4px;
+}
+
+/* Bolinha de rádio personalizada */
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 16px;
+  height: 16px;
+  border: 1.6px solid var(--accent-mauve);
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+input[type="radio"]:checked {
+  background-color: #fdf6fa;
+}
+
+input[type="radio"]:checked::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-mauve);
+  border-radius: 50%;
+}
+
+/* Botão Ok */
+.btn-submit {
+  background-color: var(--accent-mauve);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 10px 42px;
+  border-radius: 20px;
+  margin-top: 20px;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(194, 140, 176, 0.35);
+  transition: background-color 0.2s ease, transform 0.15s ease;
+  display: block;
+  width: fit-content;
+  align-self: center;
+}
+
+.btn-submit:hover {
+  background-color: var(--accent-mauve-hover);
+  transform: translateY(-1px);
+}
+
+/* --- BARRA INFERIOR (Apenas Celular) --- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 14px 0 18px 0;
+  border-top: 1px solid #f5f5f5;
+  z-index: 100;
+}
+
+.bottom-nav a {
+  color: var(--accent-mauve);
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+
+/* --- RESPONSIVIDADE PARA TELAS GRANDES (Notebooks / Tablets) --- */
+@media (min-width: 900px) {
+  /* Oculta a barra inferior de celular */
+  .bottom-nav {
+    display: none;
+  }
+
+  /* Exibe a barra lateral */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    background-color: #ffffff;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.04);
+    padding: 30px 0;
+    position: fixed;
+    height: 100vh;
+    z-index: 10;
+  }
+
+  .sidebar-logo {
+    width: 45px;
+    height: auto;
+    margin-bottom: 40px;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+  }
+
+  .sidebar-nav a {
+    color: var(--accent-mauve);
+    font-size: 1.3rem;
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+
+  .sidebar-nav a:hover {
+    transform: scale(1.1);
+  }
+
+  /* Ajusta o container principal para ocupar o espaço ao lado da sidebar */
+  .main-content {
+    margin-left: 100px;
+    padding: 40px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    max-width: 1100px;
+    padding: 40px 50px;
+    border-radius: 24px;
+  }
+
+  .logo-mobile {
+    display: none; /* Esconde a logo pequena interna no PC, pois já tem na sidebar */
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 30px;
+  }
+
+  /* Coloca os 3 cartões lado a lado */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .form-group {
+    margin-bottom: 0;
+    padding: 16px;
+  }
+
+  .question-header {
+    font-size: 0.95rem;
+    padding: 16px 12px;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-option {
+    font-size: 0.82rem;
+    padding: 10px 6px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .options-container {
+    gap: 0;
+  }
+
+  .btn-option:last-child {
+    border-bottom: none;
+  }
+}

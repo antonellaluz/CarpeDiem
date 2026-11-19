@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cronograma pronto - Carpe Diem</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#c795b5">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <img src="img/logo.png" alt="Carpe Diem" class="logo-small">
+
+    <h2>ANTES DE COMEÇARMOS, TEMOS ALGUMAS PERGUNTAS</h2>
+
+    <div class="form-group">
+      <label>Como gostaria de ser chamad@?</label>
+      <input type="text" id="username" placeholder="Digite aqui">
+    </div>
+
+    <div class="form-group">
+      <label>Em qual período do dia você está na escola?</label>
+      <select id="school-period">
+        <option value="" disabled selected>Selecione o período</option>
+        <option value="manha">Manhã</option>
+        <option value="tarde">Tarde</option>
+        <option value="noite">Noite</option>
+        <option value="integral">Integral (Manhã e Tarde)</option>
+        <option value="misto">Misto (Tarde e Noite)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Defina quantas horas serão destinadas ao sono:</label>
+      <input type="number" id="sleep-hours" placeholder="Ex: 8" min="7" max="10">
+      <span id="info" class="duration-display"></span>
+    </div>
+
+    <button class="btn-submit" onclick="continuar()">Continuar</button>
+  </div>
+
+  <script src="ui.js"></script>
+  <script>
+    function mostrarInfo(texto) {
+      const info = document.getElementById('info');
+      info.textContent = texto;
+      info.classList.toggle('error-text', Boolean(texto));
+    }
+
+    function continuar() {
+      const nome = document.getElementById('username').value.trim();
+      const periodo = document.getElementById('school-period').value;
+      const sono = parseFloat(document.getElementById('sleep-hours').value);
+
+      if (!nome || !periodo || isNaN(sono)) {
+        avisar('Por favor, preencha todos os campos antes de continuar.', { tipo: 'aviso' });
+        return;
+      }
+
+      if (sono < 7) {
+        mostrarInfo('O mínimo de sono é 7 horas. O descanso faz parte da aprovação!');
+        return;
+      }
+
+      localStorage.setItem('carpeDiem_nome', nome);
+      localStorage.setItem('carpeDiem_periodo', periodo);
+      localStorage.setItem('carpeDiem_sono', sono);
+
+      window.location.href = 'escolher-vestibular.html';
+    }
+  </script>
+</body>
+</html>

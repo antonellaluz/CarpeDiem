@@ -1,56 +1,310 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Perfil - Carpe Diem</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil | Carpe Diem</title>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#c795b5">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+
+  <link rel="stylesheet" href="perfil.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
 </head>
-<body class="dashboard-body">
+
+<body>
 
   <aside class="sidebar">
-    <img src="img/logo_minus.png" alt="Carpe Diem" class="logo-mini">
-    <div class="nav-links">
-      <a href="index.html" title="Início"><i class="fa-solid fa-house"></i></a>
-      <a href="calendario.html" title="Calendário/Cronograma"><i class="fa-solid fa-calendar-days"></i></a>
-      <a href="formulario.html" title="Formulário"><i class="fa-solid fa-file-lines"></i></a>
-      <a href="perfil.html" class="active" title="Perfil"><i class="fa-solid fa-user"></i></a>
-    </div>
+    <img src="img/logo_minus.png" alt="Carpe Diem" class="logo">
+
+    <nav>
+      <a href="index.html" title="Início"><i class="fas fa-house"></i></a>
+      <a href="calendario.html" title="Calendário"><i class="fas fa-calendar-days"></i></a>
+      <a href="formulario.html" title="Formulário"><i class="fas fa-file-lines"></i></a>
+      <a href="perfil.html" class="active" title="Perfil"><i class="fas fa-user"></i></a>
+    </nav>
   </aside>
 
   <main class="main-content">
-    <div class="header-section">
-      <h1>Perfil</h1>
-    </div>
 
-    <div class="container" style="margin: 0; max-width: 100%;">
-      <h2 style="text-align: left; margin-bottom: 4px;">Vestibulando da Silva</h2>
-      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">vestibulando@gmail.com</p>
+    <header class="page-header">
+      <div>
+        <h1>Meu perfil</h1>
+        <p>Gerencie suas informações e planeje seu futuro.</p>
+      </div>
+    </header>
 
-      <div class="form-group">
-        <p style="font-size: 13px;"><strong>Curso:</strong> Engenharia de software</p>
-        <p style="font-size: 13px; margin-top: 6px;"><strong>Universidade:</strong> UFPA</p>
-        <p style="font-size: 13px; margin-top: 6px;"><strong>Método de entrada:</strong> ENEM</p>
+    <!-- CONTA -->
+    <section class="profile-card">
+
+      <div class="profile-header">
+        <div class="avatar"><i class="fas fa-user"></i></div>
+
+        <div>
+          <h2 id="display-name">Estudante</h2>
+          <p id="display-email">E-mail não informado</p>
+        </div>
+
+        <span class="account-status">Meu perfil</span>
       </div>
 
-      <hr style="border: none; border-top: 1px solid var(--border-color); margin: 20px 0;">
+      <div class="profile-info">
+        <div>
+          <span>Curso</span>
+          <strong id="display-course">Não informado</strong>
+        </div>
 
-      <div class="options-container">
-        <a href="calendario.html" class="btn-option" style="text-align: left; font-size: 13px; text-decoration: none; display: block;">
-          <i class="fa-solid fa-rotate-right"></i> Recarregar Cronograma (Restaurar Padrão)
-        </a>
-        <a href="index.html" class="btn-option" style="text-align: left; font-size: 13px; color: var(--error-color); border-color: var(--error-color); text-decoration: none; display: block;">
-          <i class="fa-solid fa-trash"></i> Apagar dados
-        </a>
-        <a href="index.html" class="btn-option" style="text-align: left; font-size: 13px; text-decoration: none; display: block;">
-          <i class="fa-solid fa-right-from-bracket"></i> Sair
-        </a>
+        <div>
+          <span>Universidade</span>
+          <strong id="display-university">Não informada</strong>
+        </div>
+
+        <div>
+          <span>Método de ingresso</span>
+          <strong id="display-entry">Não informado</strong>
+        </div>
       </div>
-    </div>
+
+      <button type="button" class="primary-button" id="edit-profile-btn">
+        <i class="fas fa-pen"></i> Editar perfil
+      </button>
+
+      <form id="profile-form" class="edit-form hidden">
+        <h3>Editar informações</h3>
+
+        <label for="name">Como quer ser chamado(a)</label>
+        <input type="text" id="name" required>
+
+        <label for="email">E-mail (opcional)</label>
+        <input type="email" id="email">
+
+        <label for="course">Curso</label>
+        <input type="text" id="course" placeholder="Ex: Engenharia de Software">
+
+        <label for="university">Universidade</label>
+        <input type="text" id="university" placeholder="Ex: UFPA">
+
+        <label for="entry">Método de ingresso</label>
+        <select id="entry">
+          <option value="">Selecione</option>
+          <option value="ENEM/SISU">ENEM / SISU</option>
+          <option value="Vestibular próprio">Vestibular próprio</option>
+          <option value="Outro">Outro</option>
+        </select>
+
+        <div class="form-actions">
+          <button type="submit" class="primary-button">Salvar alterações</button>
+          <button type="button" id="cancel-edit" class="secondary-button">Cancelar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- FUTURO UNIVERSITÁRIO -->
+    <section class="section-card university-section">
+
+      <div class="section-heading">
+        <div class="section-icon"><i class="fas fa-graduation-cap"></i></div>
+
+        <div>
+          <h2>Meu futuro universitário</h2>
+          <p>Descubra a nota que você precisa mirar e veja como está hoje.</p>
+        </div>
+      </div>
+
+      <details class="ajuda">
+        <summary>O que é nota de corte?</summary>
+        <p>É a menor nota com que alguém conseguiu uma vaga naquele curso em uma edição anterior. Serve de meta para você mirar, mas muda a cada ano e não garante aprovação.</p>
+      </details>
+
+      <!-- PASSO 1 -->
+      <div class="passo">
+        <h3><span class="num">1</span> Qual curso você quer fazer?</h3>
+
+        <input type="text" id="goal-course" list="lista-cursos" autocomplete="off"
+               placeholder="Comece a digitar: Medicina, Direito, Engenharia...">
+        <datalist id="lista-cursos"></datalist>
+
+        <div id="uni-box" class="hidden">
+          <label for="goal-uni">Em qual universidade?</label>
+          <select id="goal-uni"></select>
+        </div>
+
+        <p id="goal-status" class="goal-status" aria-live="polite"></p>
+
+        <div id="sem-dados" class="sem-dados hidden">
+          <p>Ainda não temos a nota deste curso. Quer ajudar?</p>
+
+          <div class="form-actions">
+            <button type="button" id="pedir-nota" class="secondary-button">
+              <i class="fas fa-paper-plane"></i> Avisar o Carpe Diem
+            </button>
+            <button type="button" id="digitar-nota" class="secondary-button">
+              <i class="fas fa-keyboard"></i> Já sei a nota, quero digitar
+            </button>
+          </div>
+
+          <div id="manual-box" class="hidden">
+            <label for="manual-corte">Nota de corte que você encontrou</label>
+            <input type="number" id="manual-corte" step="0.01" min="0" placeholder="Ex: 742.35">
+          </div>
+        </div>
+      </div>
+
+      <!-- PASSO 2 -->
+      <div class="passo hidden" id="passo-corte">
+        <h3><span class="num">2</span> Esta é a sua meta</h3>
+
+        <div id="goal-card" class="goal-card"></div>
+
+        <div id="mod-box" class="hidden">
+          <label for="goal-mod">Modalidade</label>
+          <select id="goal-mod"></select>
+        </div>
+      </div>
+
+      <!-- PASSO 3 -->
+      <div class="passo hidden" id="passo-nota">
+        <h3><span class="num">3</span> Como você está hoje?</h3>
+
+        <div class="chips" id="modo-chips">
+          <button type="button" class="chip" data-modo="nao-fiz">Ainda não fiz a prova</button>
+          <button type="button" class="chip" data-modo="media">Sei minha nota</button>
+          <button type="button" class="chip" id="chip-detalhar" data-modo="detalhar">Detalhar por área</button>
+        </div>
+
+        <div id="entrada-media" class="hidden">
+          <label id="media-label" for="g-media">Sua média</label>
+          <input type="number" id="g-media" step="0.01" min="0" max="1000" placeholder="Ex: 650">
+        </div>
+
+        <div id="entrada-areas" class="hidden">
+          <div class="area-row"><span>Linguagens</span>
+            <input type="number" id="n-ling" min="0" max="1000" step="0.1" placeholder="0–1000"></div>
+          <div class="area-row"><span>Ciências Humanas</span>
+            <input type="number" id="n-hum" min="0" max="1000" step="0.1" placeholder="0–1000"></div>
+          <div class="area-row"><span>Ciências da Natureza</span>
+            <input type="number" id="n-nat" min="0" max="1000" step="0.1" placeholder="0–1000"></div>
+          <div class="area-row"><span>Matemática</span>
+            <input type="number" id="n-mat" min="0" max="1000" step="0.1" placeholder="0–1000"></div>
+          <div class="area-row"><span>Redação</span>
+            <input type="number" id="n-red" min="0" max="1000" step="0.1" placeholder="0–1000"></div>
+
+          <details class="ajuda">
+            <summary>Meu curso tem pesos diferentes (opcional)</summary>
+            <p>Alguns cursos valorizam mais certas áreas. Se você sabe os pesos do edital, informe; se não, deixe 1.</p>
+            <div class="peso-row"><span>Linguagens</span><input type="number" id="w-ling" min="1" max="10" step="1" value="1"></div>
+            <div class="peso-row"><span>Ciências Humanas</span><input type="number" id="w-hum" min="1" max="10" step="1" value="1"></div>
+            <div class="peso-row"><span>Ciências da Natureza</span><input type="number" id="w-nat" min="1" max="10" step="1" value="1"></div>
+            <div class="peso-row"><span>Matemática</span><input type="number" id="w-mat" min="1" max="10" step="1" value="1"></div>
+            <div class="peso-row"><span>Redação</span><input type="number" id="w-red" min="1" max="10" step="1" value="1"></div>
+          </details>
+        </div>
+
+        <button type="button" id="calc-btn" class="primary-button">
+          <i class="fas fa-bullseye"></i> Ver onde estou
+        </button>
+
+        <div id="calc-result" class="calc-result hidden" aria-live="polite"></div>
+      </div>
+
+      <p class="research-warning">
+        <i class="fas fa-circle-info"></i>
+        As notas de corte são referências históricas e mudam a cada edição. Elas não garantem
+        aprovação. Confira sempre o edital e o site oficial da instituição.
+      </p>
+    </section>
+    <!-- PREFERÊNCIAS -->
+    <section class="section-card">
+
+      <div class="section-heading">
+        <div class="section-icon"><i class="fas fa-sliders"></i></div>
+
+        <div>
+          <h2>Preferências</h2>
+          <p>Personalize sua experiência no Carpe Diem.</p>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong>Lembretes de estudo</strong>
+          <p>Aviso antes de cada bloco de estudo, mesmo com o site fechado.</p>
+          <p id="notif-status" class="notif-status"></p>
+        </div>
+
+        <label class="toggle">
+          <input type="checkbox" id="notifications">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-row" style="margin-top:18px;">
+        <div>
+          <strong>Alarmes no calendário do celular</strong>
+          <p>Baixe suas próximas tarefas com alarme 10 min antes. Não depende de notificações do navegador.</p>
+        </div>
+        <button type="button" id="export-ics" class="secondary-button">
+          <i class="fas fa-download"></i> Baixar
+        </button>
+      </div>
+    </section>
+
+    <!-- GERENCIAMENTO -->
+    <section class="section-card">
+
+      <div class="section-heading">
+        <div class="section-icon"><i class="fas fa-gear"></i></div>
+
+        <div>
+          <h2>Gerenciamento</h2>
+          <p>Administre seus dados e seu cronograma.</p>
+        </div>
+      </div>
+
+      <div class="management-buttons">
+
+        <button type="button" id="restore-btn" class="management-button">
+          <i class="fas fa-rotate-left"></i>
+          <span>
+            <strong>Refazer cronograma</strong>
+            <small>Apaga as tarefas e escolhe um novo plano de estudos.</small>
+          </span>
+        </button>
+
+        <button type="button" id="delete-btn" class="management-button danger">
+          <i class="fas fa-trash"></i>
+          <span>
+            <strong>Apagar meus dados</strong>
+            <small>Exclui perfil, atividades e configurações.</small>
+          </span>
+        </button>
+
+        <button type="button" id="logout-btn" class="management-button">
+          <i class="fas fa-right-from-bracket"></i>
+          <span>
+            <strong>Sair</strong>
+            <small>Começar como outra pessoa neste aparelho.</small>
+          </span>
+        </button>
+
+      </div>
+    </section>
+
+    <footer>
+      Carpe Diem © 2026 — Organize seus estudos, conquiste seus sonhos.
+    </footer>
+
   </main>
+
+  <!-- Ordem: Supabase, ui.js, regras.js, notificacoes.js, perfil.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="ui.js"></script>
+  <script src="regras.js"></script>
+  <script src="notificacoes.js"></script>
+  <script src="perfil.js"></script>
 </body>
 </html>
